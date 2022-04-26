@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.module.css';
-import { getCategories } from '../services/api';
+import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 class Home extends Component {
   state = {
     data: [],
+    valueInput: '',
+    products: [],
   };
 
   async componentDidMount() {
@@ -15,31 +17,68 @@ class Home extends Component {
     });
   }
 
+  onHandleChange = ({ target }) => {
+    const { value, name } = target;
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  search = async () => {
+    const { valueInput } = this.state;
+    const data = await getProductsFromCategoryAndQuery(null, valueInput);
+    const products = data.results;
+    this.setState({
+      products,
+    });
+  };
+
   render() {
-    const { data } = this.state;
-    console.log('data', data);
+    const { data, valueInput, products } = this.state;
+    console.log(products);
     return (
       <>
         <main>
-          <label htmlFor="input">
-            <input id="input" type="text" />
-            <Link to="/cart" data-testid="shopping-cart-button">
-              <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
-            </Link>
-          </label>
+          <input
+            data-testid="query-input"
+            name="valueInput"
+            type="text"
+            value={ valueInput }
+            onChange={ this.onHandleChange }
+          />
+          <button type="button" data-testid="query-button" onClick={ this.search }>
+            Pesquisar
+          </button>
+          <Link to="/cart" data-testid="shopping-cart-button">
+            <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
+          </Link>
+
           <p data-testid="home-initial-message">
             Digite algum termo de pesquisa ou escolha uma categoria.
           </p>
         </main>
         <nav>
           <ul>
-            {data.map((category) => (
-              <li key={ category.id } data-testid="category">
-                {category.name}
+            {data.map(({ name, id }) => (
+              <li key={ id } data-testid="category">
+                {name}
               </li>
             ))}
           </ul>
         </nav>
+        <div>
+          {products.map(({ id, title, thumbnail, price }) => (
+            <div key={ id } data-testid="product">
+              <h3>{title}</h3>
+              <img src={ thumbnail } alt={ title } />
+              <h4>
+                R$:
+                {' '}
+                {price}
+              </h4>
+            </div>
+          ))}
+        </div>
       </>
     );
   }
