@@ -1,10 +1,15 @@
 import React from 'react';
-import './App.css';
-import { getCategories } from './services/api';
+import { Route, BrowserRouter, Switch } from 'react-router-dom';
+import Home from './Pages/Home';
 
 function App() {
-  console.log(getCategories());
-  return <p>Project</p>;
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={ Home } />
+      </Switch>
+    </BrowserRouter>
+  );
 }
 
 export default App;
