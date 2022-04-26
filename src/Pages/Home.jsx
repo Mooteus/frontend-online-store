@@ -27,8 +27,6 @@ class Home extends Component {
 
   search = async () => {
     const { valueInput, categoryId } = this.state;
-    console.log('ID', categoryId);
-    console.log('value', valueInput);
     const data = await getProductsFromCategoryAndQuery(categoryId, valueInput);
     const products = data.results;
     this.setState({
@@ -93,6 +91,9 @@ class Home extends Component {
                 {' '}
                 {price}
               </h4>
+              <Link data-testid="product-detail-link" to={ `/product/${id}` }>
+                Mais detalhes
+              </Link>
             </div>
           ))}
         </div>
