@@ -8,6 +8,7 @@ class Home extends Component {
     data: [],
     valueInput: '',
     products: [],
+    categoryId: '',
   };
 
   async componentDidMount() {
@@ -25,12 +26,24 @@ class Home extends Component {
   };
 
   search = async () => {
-    const { valueInput } = this.state;
-    const data = await getProductsFromCategoryAndQuery(null, valueInput);
+    const { valueInput, categoryId } = this.state;
+    console.log('ID', categoryId);
+    console.log('value', valueInput);
+    const data = await getProductsFromCategoryAndQuery(categoryId, valueInput);
     const products = data.results;
     this.setState({
       products,
     });
+  };
+
+  selectCategory = ({ target }) => {
+    const { id } = target;
+    this.setState(
+      {
+        categoryId: id,
+      },
+      this.search,
+    );
   };
 
   render() {
@@ -58,13 +71,17 @@ class Home extends Component {
           </p>
         </main>
         <nav>
-          <ul>
-            {data.map(({ name, id }) => (
-              <li key={ id } data-testid="category">
-                {name}
-              </li>
-            ))}
-          </ul>
+          {data.map(({ name, id }) => (
+            <button
+              key={ id }
+              type="button"
+              id={ id }
+              data-testid="category"
+              onClick={ this.selectCategory }
+            >
+              {name}
+            </button>
+          ))}
         </nav>
         <div>
           {products.map(({ id, title, thumbnail, price }) => (
