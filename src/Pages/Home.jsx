@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.module.css';
-import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
+import * as api from '../services/api';
+// import {
+//   getCategories,
+//   getProductsFromCategoryAndQuery,
+//   getProductsById,
+// } from '../services/api';
 
 class Home extends Component {
   state = {
@@ -9,10 +14,11 @@ class Home extends Component {
     valueInput: '',
     products: [],
     categoryId: '',
+    cart: [],
   };
 
   async componentDidMount() {
-    const data = await getCategories();
+    const data = await api.getCategories();
     this.setState({
       data,
     });
@@ -27,7 +33,7 @@ class Home extends Component {
 
   search = async () => {
     const { valueInput, categoryId } = this.state;
-    const data = await getProductsFromCategoryAndQuery(categoryId, valueInput);
+    const data = await api.getProductsFromCategoryAndQuery(categoryId, valueInput);
     const products = data.results;
     this.setState({
       products,
@@ -44,9 +50,29 @@ class Home extends Component {
     );
   };
 
+  addCart = async ({ target }) => {
+    // const { cart } = this.state;
+    const { id } = target;
+    const product = await api.getProductsById(id);
+    // const newCart = cart;
+    // newCart.push(product);
+    this.setState(
+      ({ cart }) => ({
+        cart: [...cart, product],
+      }),
+      () => this.saveStorage(),
+    );
+  };
+
+  saveStorage = () => {
+    const { cart } = this.state;
+    console.log(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
   render() {
     const { data, valueInput, products } = this.state;
-    console.log(products);
+    // console.log(products);
     return (
       <>
         <main>
@@ -94,6 +120,14 @@ class Home extends Component {
               <Link data-testid="product-detail-link" to={ `/product/${id}` }>
                 Mais detalhes
               </Link>
+              <button
+                type="button"
+                id={ id }
+                data-testid="product-add-to-cart"
+                onClick={ this.addCart }
+              >
+                Adicionar ao carrinho
+              </button>
             </div>
           ))}
         </div>

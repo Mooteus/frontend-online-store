@@ -37,6 +37,9 @@ class ProductDetails extends Component {
           {' '}
           {price}
         </h4>
+        <button type="button" data-testid="product-detail-add-to-cart">
+          Adicionar ao carrinho
+        </button>
       </div>
     );
   }
