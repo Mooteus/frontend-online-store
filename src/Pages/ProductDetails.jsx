@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { getProductsById } from '../services/api';
 
 class ProductDetails extends Component {
   state = {
-    data: {},
+    productInformation: {},
   };
 
   componentDidMount() {
@@ -18,26 +19,46 @@ class ProductDetails extends Component {
       },
     } = this.props;
 
-    const data = await getProductsById(id);
+    const productInformation = await getProductsById(id);
     this.setState({
-      data,
+      productInformation,
     });
   };
 
+  saveStorage = () => {
+    const { productInformation } = this.state;
+    const product = JSON.parse(localStorage.getItem('cart'));
+    if (product) {
+      product.push(productInformation);
+      localStorage.setItem('cart', JSON.stringify(product));
+    }
+  };
+
   render() {
-    const { data } = this.state;
-    console.log(data);
-    const { title, thumbnail, price } = data;
+    const { productInformation } = this.state;
+    const { title, thumbnail, price } = productInformation;
     return (
-      <div>
-        <h3 data-testid="product-detail-name">{title}</h3>
-        <img src={ thumbnail } alt={ title } />
-        <h4>
-          R$:
-          {' '}
-          {price}
-        </h4>
-      </div>
+      <>
+        <Link to="/cart" data-testid="shopping-cart-button">
+          <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
+        </Link>
+        <div>
+          <h3 data-testid="product-detail-name">{title}</h3>
+          <img src={ thumbnail } alt={ title } />
+          <h4>
+            R$:
+            {' '}
+            {price}
+          </h4>
+          <button
+            type="button"
+            data-testid="product-detail-add-to-cart"
+            onClick={ this.saveStorage }
+          >
+            Adicionar ao carrinho
+          </button>
+        </div>
+      </>
     );
   }
 }

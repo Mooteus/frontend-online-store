@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.module.css';
-import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
+import PropTypes from 'prop-types';
+import * as api from '../services/api';
 
 class Home extends Component {
   state = {
@@ -9,10 +10,11 @@ class Home extends Component {
     valueInput: '',
     products: [],
     categoryId: '',
+    cart: [],
   };
 
   async componentDidMount() {
-    const data = await getCategories();
+    const data = await api.getCategories();
     this.setState({
       data,
     });
@@ -27,7 +29,7 @@ class Home extends Component {
 
   search = async () => {
     const { valueInput, categoryId } = this.state;
-    const data = await getProductsFromCategoryAndQuery(categoryId, valueInput);
+    const data = await api.getProductsFromCategoryAndQuery(categoryId, valueInput);
     const products = data.results;
     this.setState({
       products,
@@ -44,9 +46,15 @@ class Home extends Component {
     );
   };
 
+  saveStorage = () => {
+    const { cart } = this.state;
+    console.log(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
   render() {
     const { data, valueInput, products } = this.state;
-    console.log(products);
+    const { addCart } = this.props;
     return (
       <>
         <main>
@@ -94,6 +102,14 @@ class Home extends Component {
               <Link data-testid="product-detail-link" to={ `/product/${id}` }>
                 Mais detalhes
               </Link>
+              <button
+                type="button"
+                id={ id }
+                data-testid="product-add-to-cart"
+                onClick={ addCart }
+              >
+                Adicionar ao carrinho
+              </button>
             </div>
           ))}
         </div>
@@ -101,5 +117,9 @@ class Home extends Component {
     );
   }
 }
+
+Home.propTypes = {
+  addCart: PropTypes.func.isRequired,
+};
 
 export default Home;
