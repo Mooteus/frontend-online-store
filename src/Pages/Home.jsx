@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.module.css';
+import PropTypes from 'prop-types';
 import * as api from '../services/api';
-// import {
-//   getCategories,
-//   getProductsFromCategoryAndQuery,
-//   getProductsById,
-// } from '../services/api';
 
 class Home extends Component {
   state = {
@@ -50,20 +46,6 @@ class Home extends Component {
     );
   };
 
-  addCart = async ({ target }) => {
-    // const { cart } = this.state;
-    const { id } = target;
-    const product = await api.getProductsById(id);
-    // const newCart = cart;
-    // newCart.push(product);
-    this.setState(
-      ({ cart }) => ({
-        cart: [...cart, product],
-      }),
-      () => this.saveStorage(),
-    );
-  };
-
   saveStorage = () => {
     const { cart } = this.state;
     console.log(cart);
@@ -72,7 +54,7 @@ class Home extends Component {
 
   render() {
     const { data, valueInput, products } = this.state;
-    // console.log(products);
+    const { addCart } = this.props;
     return (
       <>
         <main>
@@ -124,7 +106,7 @@ class Home extends Component {
                 type="button"
                 id={ id }
                 data-testid="product-add-to-cart"
-                onClick={ this.addCart }
+                onClick={ addCart }
               >
                 Adicionar ao carrinho
               </button>
@@ -135,5 +117,9 @@ class Home extends Component {
     );
   }
 }
+
+Home.propTypes = {
+  addCart: PropTypes.func.isRequired,
+};
 
 export default Home;
