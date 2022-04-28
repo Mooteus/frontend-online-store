@@ -58,6 +58,12 @@ class ProductDetails extends Component {
     const { productInformation, inputEmail, textarea, evaluations } = this.state;
     const { addCart } = this.props;
     const { title, thumbnail, price, id } = productInformation;
+
+  render() {
+    const { productInformation } = this.state;
+    const { title, thumbnail, price, id } = productInformation;
+    const { addCart } = this.props;
+
     return (
       <>
         <Link to="/cart" data-testid="shopping-cart-button">
@@ -114,9 +120,15 @@ class ProductDetails extends Component {
             />
           </form>
           <button
+            id={ id }
             type="button"
+
             data-testid="submit-review-btn"
             onClick={ this.saveEvaluation }
+
+            data-testid="product-detail-add-to-cart"
+            onClick={ addCart }
+
           >
             Avaliar
           </button>
@@ -137,6 +149,7 @@ class ProductDetails extends Component {
   }
 }
 ProductDetails.propTypes = {
+  addCart: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
