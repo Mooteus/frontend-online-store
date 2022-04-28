@@ -26,7 +26,6 @@ class ProductDetails extends Component {
 
   render() {
     const { data } = this.state;
-    console.log(data);
     const { title, thumbnail, price } = data;
     return (
       <div>
