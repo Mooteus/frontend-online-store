@@ -25,18 +25,10 @@ class ProductDetails extends Component {
     });
   };
 
-  saveStorage = () => {
-    const { productInformation } = this.state;
-    const product = JSON.parse(localStorage.getItem('cart'));
-    if (product) {
-      product.push(productInformation);
-      localStorage.setItem('cart', JSON.stringify(product));
-    }
-  };
-
   render() {
     const { productInformation } = this.state;
-    const { title, thumbnail, price } = productInformation;
+    const { title, thumbnail, price, id } = productInformation;
+    const { addCart } = this.props;
     return (
       <>
         <Link to="/cart" data-testid="shopping-cart-button">
@@ -51,9 +43,10 @@ class ProductDetails extends Component {
             {price}
           </h4>
           <button
+            id={ id }
             type="button"
             data-testid="product-detail-add-to-cart"
-            onClick={ this.saveStorage }
+            onClick={ addCart }
           >
             Adicionar ao carrinho
           </button>
@@ -63,6 +56,7 @@ class ProductDetails extends Component {
   }
 }
 ProductDetails.propTypes = {
+  addCart: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
