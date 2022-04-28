@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class Cart extends Component {
   render() {
     const { productsCart } = this.props;
-    console.log(productsCart);
+    console.log(productsCart.length); // produto esta retornando certo
     return (
       <main>
         {productsCart.length === 0 ? (
