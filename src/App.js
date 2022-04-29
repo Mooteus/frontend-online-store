@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import Home from './Pages/Home';
 import Cart from './Pages/Cart';
+import Checkout from './Pages/Checkout';
 import ProductDetails from './Pages/ProductDetails';
 
 class App extends Component {
@@ -24,6 +25,7 @@ class App extends Component {
     );
   };
 
+  // https://pt.stackoverflow.com/questions/459413/verificar-quantas-vezes-um-n%C3%BAmero-aparece-no-array#:~:text=A%20express%C3%A3o%20counts%5Bx%5D%20%7C%7C,e%20a%20contagem%20%C3%A9%20conclu%C3%ADda.
   countProducts = () => {
     const { cart } = this.state;
     console.log('cart', cart);
@@ -81,6 +83,17 @@ class App extends Component {
             path="/cart"
             render={ () => (
               <Cart
+                productsCart={ newCart }
+                quantity={ allQuantitys }
+                handleAmount={ this.handleAmount }
+              />
+            ) }
+          />
+          <Route
+            exact
+            path="/checkout"
+            render={ () => (
+              <Checkout
                 productsCart={ newCart }
                 quantity={ allQuantitys }
                 handleAmount={ this.handleAmount }

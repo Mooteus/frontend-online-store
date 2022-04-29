@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class Cart extends Component {
-  // https://pt.stackoverflow.com/questions/459413/verificar-quantas-vezes-um-n%C3%BAmero-aparece-no-array#:~:text=A%20express%C3%A3o%20counts%5Bx%5D%20%7C%7C,e%20a%20contagem%20%C3%A9%20conclu%C3%ADda.
-
   render() {
     const { productsCart, quantity, handleAmount } = this.props;
     return (
@@ -31,9 +30,7 @@ class Cart extends Component {
                 >
                   +
                 </button>
-                <p data-testid="shopping-cart-product-quantity">
-                  {quantity[id]?.qtde}
-                </p>
+                <p data-testid="shopping-cart-product-quantity">{quantity[id]?.qtde}</p>
                 <button
                   data-testid="product-decrease-quantity"
                   type="button"
@@ -47,6 +44,11 @@ class Cart extends Component {
             </div>
           ))
         )}
+        <Link to="/checkout">
+          <button type="button" data-testid="checkout-products">
+            Finalizar Compra
+          </button>
+        </Link>
       </main>
     );
   }
