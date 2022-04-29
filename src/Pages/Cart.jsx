@@ -5,12 +5,8 @@ class Cart extends Component {
   // https://pt.stackoverflow.com/questions/459413/verificar-quantas-vezes-um-n%C3%BAmero-aparece-no-array#:~:text=A%20express%C3%A3o%20counts%5Bx%5D%20%7C%7C,e%20a%20contagem%20%C3%A9%20conclu%C3%ADda.
 
   render() {
-<<<<<<< HEAD
     const { productsCart, quantity, handleAmount } = this.props;
     console.log(productsCart);
-=======
-    const { productsCart } = this.props;
->>>>>>> 37a0a6f238f2fcb466eac8237214ef0d94945d4a
     return (
       <main>
         {productsCart.length === 0 ? (
