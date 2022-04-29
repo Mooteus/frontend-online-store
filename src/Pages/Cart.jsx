@@ -6,7 +6,6 @@ class Cart extends Component {
 
   render() {
     const { productsCart, quantity, handleAmount } = this.props;
-    console.log(productsCart);
     return (
       <main>
         {productsCart.length === 0 ? (
@@ -14,13 +13,14 @@ class Cart extends Component {
         ) : (
           productsCart.map(({ id, title, thumbnail, price }) => (
             <div key={ id }>
-              {console.log(`titulo: ${title}`)}
+              {/* {console.log(`titulo: ${title}`)} */}
               <p data-testid="shopping-cart-product-name">{title}</p>
               <img src={ thumbnail } alt={ title } />
               <h4>
                 R$:
                 {' '}
                 {price}
+                {' '}
               </h4>
               <div>
                 <button
@@ -32,10 +32,9 @@ class Cart extends Component {
                 >
                   +
                 </button>
-                <p
-                  data-testid="shopping-cart-product-quantity"
-                >
-                  {quantity[id]?.qtde || 1}
+                <p data-testid="shopping-cart-product-quantity">
+                  {/* {console.log(quantity[id]?.qtde)} */}
+                  {quantity[id]?.qtde}
                 </p>
                 <button
                   data-testid="product-decrease-quantity"
