@@ -3,7 +3,6 @@ import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import Home from './Pages/Home';
 import Cart from './Pages/Cart';
 import ProductDetails from './Pages/ProductDetails';
-import * as api from './services/api';
 
 class App extends Component {
   state = {
@@ -13,13 +12,10 @@ class App extends Component {
 
   saveStorage = () => {
     const { cart } = this.state;
-    console.log(cart);
     localStorage.setItem('cart', JSON.stringify(cart));
   };
 
-  addCart = async ({ target }) => {
-    const { id } = target;
-    const product = await api.getProductsById(id);
+  addCart = async (product) => {
     this.setState(({ cart }) => ({
       cart: [...cart, product],
     }), () => this.saveStorage);
