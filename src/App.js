@@ -10,18 +10,17 @@ class App extends Component {
     allQuantitys: [],
   };
 
-  saveStorage = () => {
-    const { cart } = this.state;
-    localStorage.setItem('cart', JSON.stringify(cart));
-    this.countProducts();
-  };
+  // saveStorage = () => {
+  //   const { cart } = this.state;
+  //   localStorage.setItem('cart', JSON.stringify(cart));
+  // };
 
   addCart = (product) => {
     this.setState(
       ({ cart }) => ({
         cart: [...cart, product],
       }),
-      () => this.saveStorage(),
+      () => this.countProducts(),
     );
   };
 
