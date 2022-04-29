@@ -106,7 +106,7 @@ class Home extends Component {
                 type="button"
                 id={ id }
                 data-testid="product-add-to-cart"
-                onClick={ addCart }
+                onClick={ () => addCart({ id, title, thumbnail, price }) }
               >
                 Adicionar ao carrinho
               </button>

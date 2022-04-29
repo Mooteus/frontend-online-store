@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class Cart extends Component {
   render() {
-    const { productsCart } = this.props;
+    const { productsCart, quantity, handleAmount } = this.props;
     return (
       <main>
         {productsCart.length === 0 ? (
@@ -17,19 +18,37 @@ class Cart extends Component {
                 R$:
                 {' '}
                 {price}
+                {' '}
               </h4>
               <div>
-                <button type="button" onClick={ this.handleAmount } value="+">
+                <button
+                  data-testid="product-increase-quantity"
+                  type="button"
+                  onClick={ handleAmount }
+                  id="add-button"
+                  value={ id }
+                >
                   +
                 </button>
-                <p data-testid="shopping-cart-product-quantity">1</p>
-                <button type="button" onClick={ this.handleAmount } value="-">
+                <p data-testid="shopping-cart-product-quantity">{quantity[id]?.qtde}</p>
+                <button
+                  data-testid="product-decrease-quantity"
+                  type="button"
+                  onClick={ handleAmount }
+                  id="rem-button"
+                  value={ id }
+                >
                   -
                 </button>
               </div>
             </div>
           ))
         )}
+        <Link to="/checkout">
+          <button type="button" data-testid="checkout-products">
+            Finalizar Compra
+          </button>
+        </Link>
       </main>
     );
   }
@@ -37,5 +56,7 @@ class Cart extends Component {
 
 Cart.propTypes = {
   productsCart: PropTypes.arrayOf(Object).isRequired,
+  quantity: PropTypes.arrayOf(Object).isRequired,
+  handleAmount: PropTypes.func.isRequired,
 };
 export default Cart;
