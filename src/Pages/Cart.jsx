@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class Cart extends Component {
+  // https://pt.stackoverflow.com/questions/459413/verificar-quantas-vezes-um-n%C3%BAmero-aparece-no-array#:~:text=A%20express%C3%A3o%20counts%5Bx%5D%20%7C%7C,e%20a%20contagem%20%C3%A9%20conclu%C3%ADda.
+
   render() {
-    const { productsCart } = this.props;
+    const { productsCart, quantity, handleAmount } = this.props;
     console.log(productsCart);
     return (
       <main>
@@ -20,11 +22,28 @@ class Cart extends Component {
                 {price}
               </h4>
               <div>
-                <button type="button" onClick={ this.handleAmount } value="+">
+                <button
+                  data-testid="product-increase-quantity"
+                  type="button"
+                  onClick={ handleAmount }
+                  id="add-button"
+                  value={ id }
+                >
                   +
                 </button>
-                <p data-testid="shopping-cart-product-quantity">1</p>
-                <button type="button" onClick={ this.handleAmount } value="-">
+                <p
+                  data-testid="shopping-cart-product-quantity"
+                >
+                  1
+                  {/* {quantity[id]?.qtde || 1} */}
+                </p>
+                <button
+                  data-testid="product-decrease-quantity"
+                  type="button"
+                  onClick={ handleAmount }
+                  id="rem-button"
+                  value={ id }
+                >
                   -
                 </button>
               </div>
@@ -38,5 +57,7 @@ class Cart extends Component {
 
 Cart.propTypes = {
   productsCart: PropTypes.arrayOf(Object).isRequired,
+  quantity: PropTypes.arrayOf(Object).isRequired,
+  handleAmount: PropTypes.func.isRequired,
 };
 export default Cart;

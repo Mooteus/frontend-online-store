@@ -8,6 +8,13 @@ import * as api from './services/api';
 class App extends Component {
   state = {
     cart: [],
+    // allQuantitys: {},
+  };
+
+  saveStorage = () => {
+    const { cart } = this.state;
+    console.log(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
   };
 
   addCart = async ({ target }) => {
@@ -15,15 +22,70 @@ class App extends Component {
     const product = await api.getProductsById(id);
     this.setState(({ cart }) => ({
       cart: [...cart, product],
-    }));
+    }), () => this.saveStorage);
   };
 
-  render() {
+  countProducts = () => {
     const { cart } = this.state;
+    const prodIds = cart.map(({ id }) => id);
+    const allQuantitys = prodIds.reduce((acc, val) => {
+      if (!acc[val]) {
+        acc[val] = {
+          qtde: 1,
+        };
+      } else acc[val].qtde += 1;
+      return acc;
+    }, []);
+    return allQuantitys;
+    // this.setState({
+    //   allQuantitys,
+    // });
+  }
+
+  filterCart = () => {
+    const { cart } = this.state;
+    let prodIds = cart.map(({ id }) => id);
+    prodIds = [...new Set(prodIds)];
+
+    const newCart = cart.filter(({ id }) => (
+      prodIds.some((prod) => prod === id) && prodIds.splice(0, 1)
+    ));
+    return newCart;
+  }
+
+  handleAmount = ({ target }) => {
+    console.log(target.value);
+    // const { id, value } = target;
+    // const { allQuantitys } = this.state;
+    // const newQuantitys = allQuantitys;
+
+    // if (id === 'add-button') {
+    //   newQuantitys[value].qtde += 1;
+    // } else if (id === 'rem-button') {
+    //   newQuantitys[value].qtde -= 1;
+    // }
+    // this.setState({
+    //   allQuantitys: newQuantitys,
+    // });
+  }
+
+  render() {
+    // const { cart } = this.state;
+    const allQuantitys = this.countProducts();
+    const newCart = this.filterCart();
+
     return (
       <BrowserRouter>
         <Switch>
-          <Route exact path="/cart" render={ () => <Cart productsCart={ cart } /> } />
+          <Route
+            exact
+            path="/cart"
+            render={ () => (<Cart
+              productsCart={ newCart }
+              quantity={ allQuantitys }
+              handleAmount={ this.handleAmount }
+            />) }
+          />
           <Route exact path="/" render={ () => <Home addCart={ this.addCart } /> } />
           <Route
             path="/product/:id"
