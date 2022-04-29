@@ -14,6 +14,7 @@ class Cart extends Component {
         ) : (
           productsCart.map(({ id, title, thumbnail, price }) => (
             <div key={ id }>
+              {console.log(`titulo: ${title}`)}
               <p data-testid="shopping-cart-product-name">{title}</p>
               <img src={ thumbnail } alt={ title } />
               <h4>
@@ -34,8 +35,7 @@ class Cart extends Component {
                 <p
                   data-testid="shopping-cart-product-quantity"
                 >
-                  1
-                  {/* {quantity[id]?.qtde || 1} */}
+                  {quantity[id]?.qtde || 1}
                 </p>
                 <button
                   data-testid="product-decrease-quantity"
