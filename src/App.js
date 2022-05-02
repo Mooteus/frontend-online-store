@@ -7,30 +7,31 @@ import ProductDetails from './Pages/ProductDetails';
 
 class App extends Component {
   state = {
-    cart: [],
+    cart: JSON.parse(localStorage.getItem('cart')) || [],
     allQuantitys: [],
   };
-
-  // saveStorage = () => {
-  //   const { cart } = this.state;
-  //   localStorage.setItem('cart', JSON.stringify(cart));
-  // };
 
   addCart = (product) => {
     this.setState(
       ({ cart }) => ({
         cart: [...cart, product],
       }),
-      () => this.countProducts(),
+      () => {
+        this.countProducts();
+        this.saveStorage();
+      },
     );
+  };
+
+  saveStorage = () => {
+    const { cart } = this.state;
+    localStorage.setItem('cart', JSON.stringify(cart));
   };
 
   // https://pt.stackoverflow.com/questions/459413/verificar-quantas-vezes-um-n%C3%BAmero-aparece-no-array#:~:text=A%20express%C3%A3o%20counts%5Bx%5D%20%7C%7C,e%20a%20contagem%20%C3%A9%20conclu%C3%ADda.
   countProducts = () => {
     const { cart } = this.state;
-    console.log('cart', cart);
     const prodIds = cart.map(({ id }) => id);
-    console.log('prodIds', prodIds);
     const allQuantitys = prodIds.reduce((acc, val) => {
       if (!acc[val]) {
         acc[val] = {
@@ -71,9 +72,8 @@ class App extends Component {
   };
 
   render() {
-    const { allQuantitys } = this.state;
+    const { allQuantitys, cart } = this.state;
     const newCart = this.filterCart();
-    console.log('allQuantitys', allQuantitys);
 
     return (
       <BrowserRouter>
@@ -100,11 +100,15 @@ class App extends Component {
               />
             ) }
           />
-          <Route exact path="/" render={ () => <Home addCart={ this.addCart } /> } />
+          <Route
+            exact
+            path="/"
+            render={ () => <Home addCart={ this.addCart } cart={ cart } /> }
+          />
           <Route
             path="/product/:id"
             render={ (PropsRouter) => (
-              <ProductDetails { ...PropsRouter } addCart={ this.addCart } />
+              <ProductDetails { ...PropsRouter } addCart={ this.addCart } cart={ cart } />
             ) }
           />
         </Switch>

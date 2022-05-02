@@ -44,11 +44,13 @@ class Cart extends Component {
             </div>
           ))
         )}
-        <Link to="/checkout">
-          <button type="button" data-testid="checkout-products">
-            Finalizar Compra
-          </button>
-        </Link>
+        {productsCart.length === 0 ? null : (
+          <Link to="/checkout">
+            <button type="button" data-testid="checkout-products">
+              Finalizar Compra
+            </button>
+          </Link>
+        )}
       </main>
     );
   }

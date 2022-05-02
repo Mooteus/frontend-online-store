@@ -54,7 +54,7 @@ class Home extends Component {
 
   render() {
     const { data, valueInput, products } = this.state;
-    const { addCart } = this.props;
+    const { addCart, cart } = this.props;
     return (
       <>
         <main>
@@ -70,6 +70,7 @@ class Home extends Component {
           </button>
           <Link to="/cart" data-testid="shopping-cart-button">
             <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
+            <p data-testid="shopping-cart-size">{cart.length}</p>
           </Link>
 
           <p data-testid="home-initial-message">
@@ -120,6 +121,7 @@ class Home extends Component {
 
 Home.propTypes = {
   addCart: PropTypes.func.isRequired,
+  cart: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default Home;
