@@ -75,7 +75,7 @@ class ProductDetails extends Component {
           id={ id }
           type="button"
           data-testid="product-detail-add-to-cart"
-          onClick={ addCart }
+          onClick={ () => addCart(productInformation) }
         >
           Adicionar ao carrinho
         </button>
@@ -114,6 +114,7 @@ class ProductDetails extends Component {
             />
           </form>
           <button
+            id={ id }
             type="button"
             data-testid="submit-review-btn"
             onClick={ this.saveEvaluation }
@@ -137,6 +138,7 @@ class ProductDetails extends Component {
   }
 }
 ProductDetails.propTypes = {
+  addCart: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
