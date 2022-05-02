@@ -48,7 +48,6 @@ class Home extends Component {
 
   saveStorage = () => {
     const { cart } = this.state;
-    console.log(cart);
     localStorage.setItem('cart', JSON.stringify(cart));
   };
 
