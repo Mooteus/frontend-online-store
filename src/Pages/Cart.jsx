@@ -5,20 +5,13 @@ import ProductCart from '../components/ProductCart';
 
 class Cart extends Component {
   render() {
-    const { productsCart, allQuantitys, handleAmount } = this.props;
+    const { productsCart } = this.props;
     return (
       <main>
         {productsCart.length === 0 ? (
           <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
         ) : (
-          productsCart.map((products, i) => (
-            <ProductCart
-              key={ i }
-              { ...products }
-              allQuantitys={ allQuantitys }
-              handleAmount={ handleAmount }
-            />
-          ))
+          productsCart.map((products, i) => <ProductCart key={ i } { ...products } />)
         )}
         {productsCart.length === 0 ? null : (
           <Link to="/checkout">
@@ -34,7 +27,5 @@ class Cart extends Component {
 
 Cart.propTypes = {
   productsCart: PropTypes.arrayOf(Object).isRequired,
-  allQuantitys: PropTypes.arrayOf(Object).isRequired,
-  handleAmount: PropTypes.func.isRequired,
 };
 export default Cart;

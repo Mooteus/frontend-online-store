@@ -11,35 +11,33 @@ class App extends Component {
   };
 
   addCart = (product) => {
-    this.setState(
-      ({ cart }) => ({
-        cart: [...cart, product],
-      }),
-      () => {
-        this.countProducts();
-        this.saveStorage();
-      },
-    );
+    const { cart } = this.state;
+    const verifyExist = cart.some(({ id }) => id === product.id);
+    if (!verifyExist) {
+      this.setState(
+        (prevState) => ({
+          cart: [...prevState.cart, product],
+        }),
+        () => {
+          this.countProducts(product);
+          this.saveStorage();
+        },
+      );
+    } else {
+      this.countProducts(product);
+      this.saveStorage();
+    }
   };
 
-  countProducts = () => {
+  countProducts = ({ id }) => {
     const { cart } = this.state;
-    const allIds = cart.map(({ id }) => id);
-    const allQuantitys = allIds.reduce((acc, curr) => {
-      console.log('ACC', acc);
-      console.log('CURR', curr);
-      if (!acc[curr]) {
-        acc[curr] = {
-          quantity: 1,
-        };
-      } else {
-        acc[curr].quantity += 1;
+    cart.forEach((product) => {
+      if (product.id === id && product.quantity >= 1) {
+        product.quantity += 1;
       }
-      return acc;
-    }, []);
-    console.log('App', allQuantitys);
-    this.setState({
-      allQuantitys,
+      if (product.id === id && product.quantity === undefined) {
+        product.quantity = 1;
+      }
     });
   };
 
@@ -47,10 +45,10 @@ class App extends Component {
     const { cart } = this.state;
     let allIds = cart.map(({ id }) => id);
     allIds = [...new Set(allIds)];
-    const productsCart = cart.filter(
+    const cartFiltered = cart.filter(
       ({ id }) => allIds.some((ids) => ids === id) && allIds.splice(0, 1),
     );
-    return productsCart;
+    return cartFiltered;
   };
 
   saveStorage = () => {
@@ -59,8 +57,8 @@ class App extends Component {
   };
 
   render() {
-    const { allQuantitys, cart } = this.state;
-    const productsCart = this.filterCart();
+    const { cart } = this.state;
+    const cartFiltered = this.filterCart();
 
     return (
       <BrowserRouter>
@@ -69,11 +67,7 @@ class App extends Component {
             exact
             path="/cart"
             render={ () => (
-              <Cart
-                productsCart={ productsCart }
-                allQuantitys={ allQuantitys }
-                handleAmount={ this.handleAmount }
-              />
+              <Cart productsCart={ cartFiltered } handleAmount={ this.handleAmount } />
             ) }
           />
           <Route
@@ -81,8 +75,7 @@ class App extends Component {
             path="/checkout"
             render={ () => (
               <Checkout
-                productsCart={ productsCart }
-                allQuantitys={ allQuantitys }
+                productsCart={ cartFiltered }
                 handleAmount={ this.handleAmount }
               />
             ) }

@@ -90,23 +90,24 @@ class Home extends Component {
           ))}
         </nav>
         <div>
-          {products.map(({ id, title, thumbnail, price }) => (
-            <div key={ id } data-testid="product">
-              <h3>{title}</h3>
-              <img src={ thumbnail } alt={ title } />
+          {products.map((product) => (
+            <div key={ product.id } data-testid="product">
+              <h3>{product.title}</h3>
+              <img src={ product.thumbnail } alt={ product.title } />
               <h4>
                 R$:
                 {' '}
-                {price}
+                {product.price}
               </h4>
-              <Link data-testid="product-detail-link" to={ `/product/${id}` }>
+
+              <Link data-testid="product-detail-link" to={ `/product/${product.id}` }>
                 Mais detalhes
               </Link>
               <button
                 type="button"
-                id={ id }
+                id={ product.id }
                 data-testid="product-add-to-cart"
-                onClick={ () => addCart({ id, title, thumbnail, price }) }
+                onClick={ () => addCart(product) }
               >
                 Adicionar ao carrinho
               </button>
