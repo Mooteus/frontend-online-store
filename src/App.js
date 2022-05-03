@@ -20,25 +20,46 @@ class App extends Component {
         }),
         () => {
           this.countProducts(product);
-          this.saveStorage();
         },
       );
     } else {
       this.countProducts(product);
-      this.saveStorage();
     }
+  };
+
+  subCart = ({ id }) => {
+    const { cart } = this.state;
+    const newCart = cart.map((product) => {
+      if (product.id === id) {
+        product.quantity -= 1;
+      }
+      return product;
+    });
+    this.setState(
+      {
+        cart: newCart,
+      },
+      () => this.saveStorage(),
+    );
   };
 
   countProducts = ({ id }) => {
     const { cart } = this.state;
-    cart.forEach((product) => {
+    const newCart = cart.map((product) => {
       if (product.id === id && product.quantity >= 1) {
         product.quantity += 1;
       }
       if (product.id === id && product.quantity === undefined) {
         product.quantity = 1;
       }
+      return product;
     });
+    this.setState(
+      {
+        cart: newCart,
+      },
+      () => this.saveStorage(),
+    );
   };
 
   filterCart = () => {
@@ -67,7 +88,11 @@ class App extends Component {
             exact
             path="/cart"
             render={ () => (
-              <Cart productsCart={ cartFiltered } handleAmount={ this.handleAmount } />
+              <Cart
+                productsCart={ cartFiltered }
+                addCart={ this.addCart }
+                subCart={ this.subCart }
+              />
             ) }
           />
           <Route

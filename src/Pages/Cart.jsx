@@ -5,7 +5,7 @@ import ProductCart from '../components/ProductCart';
 
 class Cart extends Component {
   render() {
-    const { productsCart } = this.props;
+    const { productsCart, addCart, subCart } = this.props;
     return (
       <main>
         {productsCart.length === 0 ? (
@@ -16,6 +16,8 @@ class Cart extends Component {
               key={ i }
               { ...products }
               stockQuantity={ products.available_quantity }
+              addCart={ addCart }
+              subCart={ subCart }
             />
           ))
         )}
@@ -33,5 +35,7 @@ class Cart extends Component {
 
 Cart.propTypes = {
   productsCart: PropTypes.arrayOf(Object).isRequired,
+  addCart: PropTypes.func.isRequired,
+  subCart: PropTypes.func.isRequired,
 };
 export default Cart;

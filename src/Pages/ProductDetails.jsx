@@ -61,11 +61,12 @@ class ProductDetails extends Component {
     const { productInformation, inputEmail, textarea, evaluations } = this.state;
     const { addCart, cart } = this.props;
     const { title, thumbnail, price, id } = productInformation;
+    const totalProducts = cart.reduce((acc, curr) => acc + curr.quantity, 0);
     return (
       <>
         <Link to="/cart" data-testid="shopping-cart-button">
           <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
-          <p data-testid="shopping-cart-size">{cart.length}</p>
+          <p data-testid="shopping-cart-size">{totalProducts}</p>
         </Link>
         <div>
           <h3 data-testid="product-detail-name">{title}</h3>

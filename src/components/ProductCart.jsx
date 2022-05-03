@@ -3,102 +3,79 @@ import PropTypes from 'prop-types';
 
 class ProductCart extends Component {
   state = {
-    quantityItem: 1,
     disabled: false,
-    MinProduct: false,
+    minProduct: false,
     maxProduct: false,
   };
 
-  componentDidMount() {
-    const { quantity } = this.props;
-    this.setState({
-      quantityItem: quantity,
-    });
-  }
-
   handleButton = () => {
-    const { quantityItem } = this.state;
+    const { quantity } = this.props;
     const { stockQuantity } = this.props;
-    if (stockQuantity === quantityItem) {
+    if (stockQuantity === quantity) {
       this.setState({
         disabled: true,
         maxProduct: true,
       });
-    } else {
-      this.setState({
-        disabled: false,
-        maxProduct: false,
-      });
+      return false;
     }
+    this.setState({
+      disabled: false,
+      maxProduct: false,
+    });
+    return true;
   };
 
-  handleAmount = ({ target }) => {
-    const { quantityItem } = this.state;
+  handleAmount = ({ id, title, thumbnail, price, quantity }, { target }) => {
     const { name } = target;
-    if (name === 'add-button') {
-      if (quantityItem >= 0) {
-        this.setState({
-          MinProduct: false,
-        });
+    const { addCart, subCart } = this.props;
+    if (this.handleButton()) {
+      if (name === 'add-button') {
+        addCart({ id, title, thumbnail, price, quantity });
       }
-      this.setState(
-        (prevState) => ({
-          quantityItem: prevState.quantityItem + 1,
-        }),
-        () => this.handleButton(),
-      );
-    }
-
-    if (name === 'rem-button') {
-      if (quantityItem === 0) {
-        this.setState({
-          MinProduct: true,
-          quantityItem: 1,
-        });
+      if (name === 'rem-button') {
+        subCart({ id, title, thumbnail, price, quantity });
       }
-      this.setState(
-        (prevState) => ({
-          quantityItem: prevState.quantityItem - 1,
-        }),
-        () => this.handleButton(),
-      );
+    } else if (name === 'rem-button') {
+      subCart({ id, title, thumbnail, price, quantity });
     }
   };
 
   render() {
-    const { id, title, thumbnail, price } = this.props;
-    const { quantityItem, disabled, MinProduct, maxProduct } = this.state;
+    const { id, title, thumbnail, price, quantity } = this.props;
+    const products = { id, title, thumbnail, price, quantity };
+    const { disabled, minProduct, maxProduct } = this.state;
     return (
       <div key={ id }>
         <p data-testid="shopping-cart-product-name">{title}</p>
         <img src={ thumbnail } alt={ title } />
         <h4>
           R$:
-          {price}
+          {price * quantity}
         </h4>
         <div>
-          {maxProduct ? <p>A quantidade maxima em estoque foi atingida</p> : null}
           <button
             data-testid="product-increase-quantity"
             type="button"
-            onClick={ this.handleAmount }
+            onClick={ (event) => this.handleAmount(products, event) }
             name="add-button"
             disabled={ disabled }
           >
             +
           </button>
-          <p data-testid="shopping-cart-product-quantity">{quantityItem}</p>
+
+          <p data-testid="shopping-cart-product-quantity">{quantity}</p>
           <button
             data-testid="product-decrease-quantity"
             type="button"
-            onClick={ (event) => this.handleAmount(event) }
+            onClick={ (event) => this.handleAmount(products, event) }
             name="rem-button"
           >
             -
           </button>
-          {MinProduct ? (
-            <p>A quantidade de produtos não pode ser menor que zero :( </p>
+          {minProduct ? (
+            <p>A quantidade de produtos não pode ser menor que zero</p>
           ) : null}
+          {maxProduct ? <p>A quantidade maxima em estoque foi atingida</p> : null}
         </div>
       </div>
     );
@@ -112,5 +89,7 @@ ProductCart.propTypes = {
   price: PropTypes.number.isRequired,
   quantity: PropTypes.number.isRequired,
   stockQuantity: PropTypes.number.isRequired,
+  addCart: PropTypes.func.isRequired,
+  subCart: PropTypes.func.isRequired,
 };
 export default ProductCart;

@@ -33,6 +33,7 @@ class Home extends Component {
     const products = data.results;
     this.setState({
       products,
+      valueInput: '',
     });
   };
 
