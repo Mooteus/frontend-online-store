@@ -88,7 +88,11 @@ class App extends Component {
           <Route
             path="/product/:id"
             render={ (PropsRouter) => (
-              <ProductDetails { ...PropsRouter } addCart={ this.addCart } cart={ cart } />
+              <ProductDetails
+                { ...PropsRouter }
+                addCart={ this.addCart }
+                cart={ cartFiltered }
+              />
             ) }
           />
         </Switch>

@@ -5,6 +5,8 @@ class ProductCart extends Component {
   state = {
     quantityItem: 1,
     disabled: false,
+    MinProduct: false,
+    maxProduct: false,
   };
 
   componentDidMount() {
@@ -20,19 +22,25 @@ class ProductCart extends Component {
     if (stockQuantity === quantityItem) {
       this.setState({
         disabled: true,
+        maxProduct: true,
       });
     } else {
       this.setState({
         disabled: false,
+        maxProduct: false,
       });
     }
   };
 
-  // https://pt.stackoverflow.com/questions/459413/verificar-quantas-vezes-um-n%C3%BAmero-aparece-no-array#:~:text=A%20express%C3%A3o%20counts%5Bx%5D%20%7C%7C,e%20a%20contagem%20%C3%A9%20conclu%C3%ADda.
   handleAmount = ({ target }) => {
     const { quantityItem } = this.state;
     const { name } = target;
     if (name === 'add-button') {
+      if (quantityItem >= 0) {
+        this.setState({
+          MinProduct: false,
+        });
+      }
       this.setState(
         (prevState) => ({
           quantityItem: prevState.quantityItem + 1,
@@ -42,6 +50,12 @@ class ProductCart extends Component {
     }
 
     if (name === 'rem-button') {
+      if (quantityItem === 0) {
+        this.setState({
+          MinProduct: true,
+          quantityItem: 1,
+        });
+      }
       this.setState(
         (prevState) => ({
           quantityItem: prevState.quantityItem - 1,
@@ -49,17 +63,11 @@ class ProductCart extends Component {
         () => this.handleButton(),
       );
     }
-
-    if (quantityItem < 1) {
-      this.setState({
-        quantityItem: 1,
-      });
-    }
   };
 
   render() {
-    const { id, title, thumbnail, price, stockQuantity } = this.props;
-    const { quantityItem, disabled } = this.state;
+    const { id, title, thumbnail, price } = this.props;
+    const { quantityItem, disabled, MinProduct, maxProduct } = this.state;
     return (
       <div key={ id }>
         <p data-testid="shopping-cart-product-name">{title}</p>
@@ -68,8 +76,8 @@ class ProductCart extends Component {
           R$:
           {price}
         </h4>
-        <p>{stockQuantity}</p>
         <div>
+          {maxProduct ? <p>A quantidade maxima em estoque foi atingida</p> : null}
           <button
             data-testid="product-increase-quantity"
             type="button"
@@ -88,6 +96,9 @@ class ProductCart extends Component {
           >
             -
           </button>
+          {MinProduct ? (
+            <p>A quantidade de produtos não pode ser menor que zero :( </p>
+          ) : null}
         </div>
       </div>
     );
