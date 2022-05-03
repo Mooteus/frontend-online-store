@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 
 class Checkout extends Component {
   render() {
-    const { productsCart, quantity } = this.props;
+    const { productsCart } = this.props;
     return (
       <>
-        {productsCart.map(({ id, title, thumbnail, price }) => (
+        {productsCart.map(({ id, title, thumbnail, price, quantity }) => (
           <div key={ id }>
             <p data-testid="shopping-cart-product-name">{title}</p>
             <img src={ thumbnail } alt={ title } />
             <h4>
               R$:
               {' '}
-              {price * quantity[id]?.qtde}
+              {price * quantity}
               {' '}
             </h4>
             <div />
@@ -54,6 +54,5 @@ class Checkout extends Component {
 
 Checkout.propTypes = {
   productsCart: PropTypes.arrayOf(Object).isRequired,
-  quantity: PropTypes.arrayOf(Object).isRequired,
 };
 export default Checkout;

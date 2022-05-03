@@ -45,6 +45,9 @@ class ProductDetails extends Component {
     this.setState(
       (prevState) => ({
         evaluations: [...prevState.evaluations, evaluation],
+        inputEmail: '',
+        textarea: '',
+        radio: '',
       }),
       () => {
         const { evaluations } = this.state;
@@ -56,12 +59,14 @@ class ProductDetails extends Component {
   render() {
     const starNumber = 5;
     const { productInformation, inputEmail, textarea, evaluations } = this.state;
-    const { addCart } = this.props;
+    const { addCart, cart } = this.props;
     const { title, thumbnail, price, id } = productInformation;
+    const totalProducts = cart.reduce((acc, curr) => acc + curr.quantity, 0);
     return (
       <>
         <Link to="/cart" data-testid="shopping-cart-button">
           <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
+          <p data-testid="shopping-cart-size">{totalProducts}</p>
         </Link>
         <div>
           <h3 data-testid="product-detail-name">{title}</h3>
@@ -106,7 +111,7 @@ class ProductDetails extends Component {
                 );
               })}
             </label>
-            <input
+            <textarea
               name="textarea"
               data-testid="product-detail-evaluation"
               onChange={ this.onHandleChange }
@@ -148,6 +153,7 @@ ProductDetails.propTypes = {
 
 ProductDetails.propTypes = {
   addCart: PropTypes.func.isRequired,
+  cart: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default ProductDetails;

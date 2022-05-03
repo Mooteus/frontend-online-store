@@ -33,6 +33,7 @@ class Home extends Component {
     const products = data.results;
     this.setState({
       products,
+      valueInput: '',
     });
   };
 
@@ -48,13 +49,12 @@ class Home extends Component {
 
   saveStorage = () => {
     const { cart } = this.state;
-    console.log(cart);
     localStorage.setItem('cart', JSON.stringify(cart));
   };
 
   render() {
     const { data, valueInput, products } = this.state;
-    const { addCart } = this.props;
+    const { addCart, cart } = this.props;
     return (
       <>
         <main>
@@ -70,6 +70,7 @@ class Home extends Component {
           </button>
           <Link to="/cart" data-testid="shopping-cart-button">
             <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
+            <p data-testid="shopping-cart-size">{cart.length}</p>
           </Link>
 
           <p data-testid="home-initial-message">
@@ -90,23 +91,26 @@ class Home extends Component {
           ))}
         </nav>
         <div>
-          {products.map(({ id, title, thumbnail, price }) => (
-            <div key={ id } data-testid="product">
-              <h3>{title}</h3>
-              <img src={ thumbnail } alt={ title } />
+          {products.map((product) => (
+            <div key={ product.id } data-testid="product">
+              <h3>{product.title}</h3>
+              <img src={ product.thumbnail } alt={ product.title } />
               <h4>
                 R$:
                 {' '}
-                {price}
+                {product.price}
               </h4>
-              <Link data-testid="product-detail-link" to={ `/product/${id}` }>
+              {product.shipping.free_shipping ? (
+                <p data-testid="free-shipping">Frete Gratis</p>
+              ) : null}
+              <Link data-testid="product-detail-link" to={ `/product/${product.id}` }>
                 Mais detalhes
               </Link>
               <button
                 type="button"
-                id={ id }
+                id={ product.id }
                 data-testid="product-add-to-cart"
-                onClick={ () => addCart({ id, title, thumbnail, price }) }
+                onClick={ () => addCart(product) }
               >
                 Adicionar ao carrinho
               </button>
@@ -120,6 +124,7 @@ class Home extends Component {
 
 Home.propTypes = {
   addCart: PropTypes.func.isRequired,
+  cart: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default Home;

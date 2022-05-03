@@ -7,73 +7,79 @@ import ProductDetails from './Pages/ProductDetails';
 
 class App extends Component {
   state = {
-    cart: [],
-    allQuantitys: [],
+    cart: JSON.parse(localStorage.getItem('cart')) || [],
   };
 
-  // saveStorage = () => {
-  //   const { cart } = this.state;
-  //   localStorage.setItem('cart', JSON.stringify(cart));
-  // };
-
   addCart = (product) => {
+    const { cart } = this.state;
+    const verifyExist = cart.some(({ id }) => id === product.id);
+    if (!verifyExist) {
+      this.setState(
+        (prevState) => ({
+          cart: [...prevState.cart, product],
+        }),
+        () => {
+          this.countProducts(product);
+        },
+      );
+    } else {
+      this.countProducts(product);
+    }
+  };
+
+  subCart = ({ id }) => {
+    const { cart } = this.state;
+    const newCart = cart.map((product) => {
+      if (product.id === id) {
+        product.quantity -= 1;
+      }
+      return product;
+    });
     this.setState(
-      ({ cart }) => ({
-        cart: [...cart, product],
-      }),
-      () => this.countProducts(),
+      {
+        cart: newCart,
+      },
+      () => this.saveStorage(),
     );
   };
 
-  // https://pt.stackoverflow.com/questions/459413/verificar-quantas-vezes-um-n%C3%BAmero-aparece-no-array#:~:text=A%20express%C3%A3o%20counts%5Bx%5D%20%7C%7C,e%20a%20contagem%20%C3%A9%20conclu%C3%ADda.
-  countProducts = () => {
+  countProducts = ({ id }) => {
     const { cart } = this.state;
-    console.log('cart', cart);
-    const prodIds = cart.map(({ id }) => id);
-    console.log('prodIds', prodIds);
-    const allQuantitys = prodIds.reduce((acc, val) => {
-      if (!acc[val]) {
-        acc[val] = {
-          qtde: 1,
-        };
-      } else acc[val].qtde += 1;
-      return acc;
-    }, []);
-    this.setState({
-      allQuantitys,
+    const newCart = cart.map((product) => {
+      if (product.id === id && product.quantity >= 1) {
+        product.quantity += 1;
+      }
+      if (product.id === id && product.quantity === undefined) {
+        product.quantity = 1;
+      }
+      return product;
     });
+    this.setState(
+      {
+        cart: newCart,
+      },
+      () => this.saveStorage(),
+    );
   };
 
   filterCart = () => {
     const { cart } = this.state;
-    let prodIds = cart.map(({ id }) => id);
-    prodIds = [...new Set(prodIds)];
-
-    const newCart = cart.filter(
-      ({ id }) => prodIds.some((prod) => prod === id) && prodIds.splice(0, 1),
+    let allIds = cart.map(({ id }) => id);
+    allIds = [...new Set(allIds)];
+    const cartFiltered = cart.filter(
+      ({ id }) => allIds.some((ids) => ids === id) && allIds.splice(0, 1),
     );
-    return newCart;
+    return cartFiltered;
   };
 
-  handleAmount = ({ target }) => {
-    const { id, value } = target;
-    const { allQuantitys } = this.state;
-    const newQuantitys = allQuantitys;
-
-    if (id === 'add-button') {
-      newQuantitys[value].qtde += 1;
-    } else if (id === 'rem-button') {
-      newQuantitys[value].qtde -= 1;
-    }
-    this.setState({
-      allQuantitys: newQuantitys,
-    });
+  saveStorage = () => {
+    const { cart } = this.state;
+    localStorage.setItem('cart', JSON.stringify(cart));
   };
 
   render() {
-    const { allQuantitys } = this.state;
-    const newCart = this.filterCart();
-    console.log('allQuantitys', allQuantitys);
+    const { cart } = this.state;
+    const cartFiltered = this.filterCart();
 
     return (
       <BrowserRouter>
@@ -83,9 +89,9 @@ class App extends Component {
             path="/cart"
             render={ () => (
               <Cart
-                productsCart={ newCart }
-                quantity={ allQuantitys }
-                handleAmount={ this.handleAmount }
+                productsCart={ cartFiltered }
+                addCart={ this.addCart }
+                subCart={ this.subCart }
               />
             ) }
           />
@@ -94,17 +100,24 @@ class App extends Component {
             path="/checkout"
             render={ () => (
               <Checkout
-                productsCart={ newCart }
-                quantity={ allQuantitys }
+                productsCart={ cartFiltered }
                 handleAmount={ this.handleAmount }
               />
             ) }
           />
-          <Route exact path="/" render={ () => <Home addCart={ this.addCart } /> } />
+          <Route
+            exact
+            path="/"
+            render={ () => <Home addCart={ this.addCart } cart={ cart } /> }
+          />
           <Route
             path="/product/:id"
             render={ (PropsRouter) => (
-              <ProductDetails { ...PropsRouter } addCart={ this.addCart } />
+              <ProductDetails
+                { ...PropsRouter }
+                addCart={ this.addCart }
+                cart={ cartFiltered }
+              />
             ) }
           />
         </Switch>
