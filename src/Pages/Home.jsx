@@ -100,6 +100,9 @@ class Home extends Component {
                 {' '}
                 {product.price}
               </h4>
+              {product.shipping.free_shipping ? (
+                <p data-testid="free-shipping">Frete Gratis</p>
+              ) : null}
               <Link data-testid="product-detail-link" to={ `/product/${product.id}` }>
                 Mais detalhes
               </Link>
