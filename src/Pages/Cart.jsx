@@ -11,7 +11,13 @@ class Cart extends Component {
         {productsCart.length === 0 ? (
           <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
         ) : (
-          productsCart.map((products, i) => <ProductCart key={ i } { ...products } />)
+          productsCart.map((products, i) => (
+            <ProductCart
+              key={ i }
+              { ...products }
+              stockQuantity={ products.available_quantity }
+            />
+          ))
         )}
         {productsCart.length === 0 ? null : (
           <Link to="/checkout">

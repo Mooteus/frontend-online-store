@@ -14,14 +14,19 @@ class ProductCart extends Component {
     });
   }
 
-  // handleButton = () => {
-  //   const { quantityItem } = this.state;
-  //   if (available_quantity === quantityItem) {
-  //     this.setState({
-  //       disabled: true,
-  //     });
-  //   }
-  // };
+  handleButton = () => {
+    const { quantityItem } = this.state;
+    const { stockQuantity } = this.props;
+    if (stockQuantity === quantityItem) {
+      this.setState({
+        disabled: true,
+      });
+    } else {
+      this.setState({
+        disabled: false,
+      });
+    }
+  };
 
   // https://pt.stackoverflow.com/questions/459413/verificar-quantas-vezes-um-n%C3%BAmero-aparece-no-array#:~:text=A%20express%C3%A3o%20counts%5Bx%5D%20%7C%7C,e%20a%20contagem%20%C3%A9%20conclu%C3%ADda.
   handleAmount = ({ target }) => {
@@ -32,26 +37,29 @@ class ProductCart extends Component {
         (prevState) => ({
           quantityItem: prevState.quantityItem + 1,
         }),
+        () => this.handleButton(),
       );
     }
 
     if (name === 'rem-button') {
-      this.setState((prevState) => ({
-        quantityItem: prevState.quantityItem - 1,
-      }));
+      this.setState(
+        (prevState) => ({
+          quantityItem: prevState.quantityItem - 1,
+        }),
+        () => this.handleButton(),
+      );
     }
 
     if (quantityItem < 1) {
       this.setState({
-        quantityItem: 0,
+        quantityItem: 1,
       });
     }
   };
 
   render() {
-    const { id, title, thumbnail, price } = this.props;
-    const { quantityItem } = this.state;
-    const { disabled } = this.state;
+    const { id, title, thumbnail, price, stockQuantity } = this.props;
+    const { quantityItem, disabled } = this.state;
     return (
       <div key={ id }>
         <p data-testid="shopping-cart-product-name">{title}</p>
@@ -60,6 +68,7 @@ class ProductCart extends Component {
           R$:
           {price}
         </h4>
+        <p>{stockQuantity}</p>
         <div>
           <button
             data-testid="product-increase-quantity"
@@ -91,5 +100,6 @@ ProductCart.propTypes = {
   thumbnail: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   quantity: PropTypes.number.isRequired,
+  stockQuantity: PropTypes.number.isRequired,
 };
 export default ProductCart;
