@@ -8,6 +8,11 @@ class Cart extends Component {
     const { productsCart, addCart, subCart } = this.props;
     return (
       <main>
+        <Link to="/">
+          <button type="button" data-testid="checkout-products">
+            Inicio
+          </button>
+        </Link>
         {productsCart.length === 0 ? (
           <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
         ) : (

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { getProductsById } from '../services/api';
 
 class ProductDetails extends Component {
   state = {
@@ -9,6 +8,10 @@ class ProductDetails extends Component {
     inputEmail: '',
     textarea: '',
     evaluations: JSON.parse(localStorage.getItem('evaluations')) || [],
+    minProduct: false,
+    maxProduct: false,
+    disabledDecrease: false,
+    disabledIncrease: false,
   };
 
   componentDidMount() {
@@ -21,8 +24,9 @@ class ProductDetails extends Component {
         params: { id },
       },
     } = this.props;
-
-    const productInformation = await getProductsById(id);
+    const { cart } = this.props;
+    const productInformation = cart.find((product) => product.id === id);
+    console.log(productInformation);
     this.setState({
       productInformation,
     });
@@ -56,11 +60,59 @@ class ProductDetails extends Component {
     );
   };
 
+  handleButton = () => {
+    const { productInformation } = this.state;
+    const { quantity, available_quantity: stockQuantity } = productInformation;
+    if (stockQuantity === quantity) {
+      this.setState({
+        disabledIncrease: true,
+        maxProduct: true,
+      });
+    } else {
+      this.setState({
+        disabledIncrease: false,
+        maxProduct: false,
+      });
+    }
+    if (quantity === 0) {
+      this.setState({
+        disabledDecrease: true,
+        minProduct: true,
+      });
+    } else {
+      this.setState({
+        disabledDecrease: false,
+        minProduct: false,
+      });
+    }
+  };
+
+  handleAmount = async ({ id, title, thumbnail, price, quantity }, { target }) => {
+    const { name } = target;
+    const { addCart, subCart } = this.props;
+    if (name === 'add-button') {
+      await addCart({ id, title, thumbnail, price, quantity });
+    }
+    if (name === 'rem-button') {
+      await subCart({ id, title, thumbnail, price, quantity });
+    }
+    this.handleButton();
+  };
+
   render() {
     const starNumber = 5;
-    const { productInformation, inputEmail, textarea, evaluations } = this.state;
+    const {
+      productInformation,
+      inputEmail,
+      textarea,
+      evaluations,
+      minProduct,
+      maxProduct,
+      disabledIncrease,
+      disabledDecrease,
+    } = this.state;
     const { addCart, cart } = this.props;
-    const { title, thumbnail, price, id } = productInformation;
+    const { title, thumbnail, price, id, quantity } = productInformation;
     const totalProducts = cart.reduce((acc, curr) => acc + curr.quantity, 0);
     return (
       <>
@@ -75,6 +127,31 @@ class ProductDetails extends Component {
             R$:
             {price}
           </h4>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            onClick={ (event) => this.handleAmount(productInformation, event) }
+            name="add-button"
+            disabled={ disabledIncrease }
+          >
+            +
+          </button>
+
+          <p>{quantity}</p>
+          <button
+            type="button"
+            onClick={ (event) => this.handleAmount(productInformation, event) }
+            name="rem-button"
+            disabled={ disabledDecrease }
+          >
+            -
+          </button>
+          {minProduct ? (
+            <p>A quantidade de produtos não pode ser menor que zero</p>
+          ) : null}
+          {maxProduct ? <p>A quantidade maxima em estoque foi atingida</p> : null}
         </div>
         <button
           id={ id }
@@ -152,8 +229,9 @@ ProductDetails.propTypes = {
 };
 
 ProductDetails.propTypes = {
-  addCart: PropTypes.func.isRequired,
   cart: PropTypes.arrayOf(Object).isRequired,
+  addCart: PropTypes.func.isRequired,
+  subCart: PropTypes.func.isRequired,
 };
 
 export default ProductDetails;

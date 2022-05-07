@@ -1,49 +1,64 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class ProductCart extends Component {
   state = {
-    disabled: false,
+    disabledIncrease: false,
     minProduct: false,
     maxProduct: false,
+    disabledDecrease: false,
   };
+
+  componentDidMount() {
+    this.handleButton();
+  }
 
   handleButton = () => {
     const { quantity } = this.props;
+    console.log('quantity em ProductCart', quantity);
     const { stockQuantity } = this.props;
+    console.log('stockQuantity em ProductCart', stockQuantity);
     if (stockQuantity === quantity) {
       this.setState({
-        disabled: true,
+        disabledIncrease: true,
         maxProduct: true,
       });
-      return false;
+    } else {
+      this.setState({
+        disabledIncrease: false,
+        maxProduct: false,
+      });
     }
-    this.setState({
-      disabled: false,
-      maxProduct: false,
-    });
-    return true;
+    if (quantity === 0) {
+      this.setState({
+        disabledDecrease: true,
+        minProduct: true,
+      });
+    } else {
+      this.setState({
+        disabledDecrease: false,
+        minProduct: false,
+      });
+    }
   };
 
-  handleAmount = ({ id, title, thumbnail, price, quantity }, { target }) => {
+  handleAmount = async ({ id, title, thumbnail, price, quantity }, { target }) => {
     const { name } = target;
     const { addCart, subCart } = this.props;
-    if (this.handleButton()) {
-      if (name === 'add-button') {
-        addCart({ id, title, thumbnail, price, quantity });
-      }
-      if (name === 'rem-button') {
-        subCart({ id, title, thumbnail, price, quantity });
-      }
-    } else if (name === 'rem-button') {
-      subCart({ id, title, thumbnail, price, quantity });
+    if (name === 'add-button') {
+      await addCart({ id, title, thumbnail, price, quantity });
     }
+    if (name === 'rem-button') {
+      await subCart({ id, title, thumbnail, price, quantity });
+    }
+    this.handleButton();
   };
 
   render() {
     const { id, title, thumbnail, price, quantity } = this.props;
     const products = { id, title, thumbnail, price, quantity };
-    const { disabled, minProduct, maxProduct } = this.state;
+    const { disabledIncrease, minProduct, maxProduct, disabledDecrease } = this.state;
     return (
       <div key={ id }>
         <p data-testid="shopping-cart-product-name">{title}</p>
@@ -52,13 +67,16 @@ class ProductCart extends Component {
           R$:
           {price * quantity}
         </h4>
+        <Link data-testid="product-detail-link" to={ `/product/${id}` }>
+          Mais detalhes
+        </Link>
         <div>
           <button
             data-testid="product-increase-quantity"
             type="button"
             onClick={ (event) => this.handleAmount(products, event) }
             name="add-button"
-            disabled={ disabled }
+            disabled={ disabledIncrease }
           >
             +
           </button>
@@ -69,6 +87,7 @@ class ProductCart extends Component {
             type="button"
             onClick={ (event) => this.handleAmount(products, event) }
             name="rem-button"
+            disabled={ disabledDecrease }
           >
             -
           </button>

@@ -46,7 +46,7 @@ class App extends Component {
   countProducts = ({ id }) => {
     const { cart } = this.state;
     const newCart = cart.map((product) => {
-      if (product.id === id && product.quantity >= 1) {
+      if (product.id === id && product.quantity >= 0) {
         product.quantity += 1;
       }
       if (product.id === id && product.quantity === undefined) {
@@ -117,6 +117,7 @@ class App extends Component {
                 { ...PropsRouter }
                 addCart={ this.addCart }
                 cart={ cartFiltered }
+                subCart={ this.subCart }
               />
             ) }
           />
