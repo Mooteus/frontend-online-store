@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './Home.module.css';
 import PropTypes from 'prop-types';
-import * as api from '../services/api';
+import * as api from '../../services/api';
+
+import CartImage from './img/cart-shopping-solid.svg';
+import * as styled from './Home.styled';
 
 class Home extends Component {
   state = {
@@ -57,26 +59,37 @@ class Home extends Component {
     const { addCart, cart } = this.props;
     return (
       <>
-        <main>
-          <input
-            data-testid="query-input"
-            name="valueInput"
-            type="text"
-            value={ valueInput }
-            onChange={ this.onHandleChange }
-          />
-          <button type="button" data-testid="query-button" onClick={ this.search }>
-            Pesquisar
-          </button>
-          <Link to="/cart" data-testid="shopping-cart-button">
-            <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
-            <p data-testid="shopping-cart-size">{cart.length}</p>
-          </Link>
-
-          <p data-testid="home-initial-message">
-            Digite algum termo de pesquisa ou escolha uma categoria.
-          </p>
-        </main>
+        <styled.Header>
+          <styled.SearchContainer>
+            <styled.SearchInput
+              data-testid="query-input"
+              name="valueInput"
+              type="text"
+              value={ valueInput }
+              onChange={ this.onHandleChange }
+            />
+            <styled.SearchButton
+              type="button"
+              data-testid="query-button"
+              onClick={ this.search }
+            >
+              Pesquisar
+            </styled.SearchButton>
+          </styled.SearchContainer>
+          <styled.CartContainer>
+            <Link to="/cart" data-testid="shopping-cart-button">
+              <styled.CartIcon src={ CartImage } alt="Button Carrinho de Compras" />
+            </Link>
+            <styled.CartCounter
+              data-testid="shopping-cart-size"
+            >
+              {cart.length}
+            </styled.CartCounter>
+          </styled.CartContainer>
+        </styled.Header>
+        <styled.HomeMensage data-testid="home-initial-message">
+          Digite algum termo de pesquisa ou escolha uma categoria.
+        </styled.HomeMensage>
         <nav>
           {data.map(({ name, id }) => (
             <button
