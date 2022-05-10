@@ -17,7 +17,13 @@ class ProductCart extends Component {
       quantity,
       handleAmount,
       handleProduct } = this.props;
-    const products = { id, title, thumbnail, price, quantity };
+    const products = {
+      id,
+      title,
+      thumbnail,
+      price,
+      quantity,
+    };
     const { disabledIncrease, minProduct, maxProduct, disabledDecrease } = handleProduct;
     return (
       <div key={ id }>
@@ -51,10 +57,8 @@ class ProductCart extends Component {
           >
             -
           </button>
-          {minProduct ? (
-            <p>A quantidade de produtos não pode ser menor que zero</p>
-          ) : null}
-          {maxProduct ? <p>A quantidade maxima em estoque foi atingida</p> : null}
+          {minProduct && <p>A quantidade de produtos não pode ser menor que zero</p>}
+          {maxProduct && <p>A quantidade maxima em estoque foi atingida</p>}
         </div>
       </div>
     );

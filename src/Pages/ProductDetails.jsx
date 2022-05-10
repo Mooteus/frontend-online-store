@@ -103,10 +103,8 @@ class ProductDetails extends Component {
           >
             -
           </button>
-          {minProduct ? (
-            <p>A quantidade de produtos não pode ser menor que zero</p>
-          ) : null}
-          {maxProduct ? <p>A quantidade maxima em estoque foi atingida</p> : null}
+          {minProduct && <p>A quantidade de produtos não pode ser menor que zero</p>}
+          {maxProduct && <p>A quantidade maxima em estoque foi atingida</p>}
         </div>
         <button
           id={ id }

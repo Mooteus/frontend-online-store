@@ -49,7 +49,10 @@ class App extends Component {
     );
   };
 
-  handleButton = (stockQuantity, quantity) => {
+  handleButton = (id) => {
+    const { cart } = this.state;
+    const productCart = cart.find((product) => product.id === id);
+    const { quantity, available_quantity: stockQuantity } = productCart;
     console.log(stockQuantity);
     if (stockQuantity === quantity) {
       this.setState({
@@ -81,10 +84,7 @@ class App extends Component {
     }
   };
 
-  handleAmount = (
-    { id, title, thumbnail, price, quantity, stockQuantity },
-    { target },
-  ) => {
+  handleAmount = ({ id, title, thumbnail, price, quantity }, { target }) => {
     const { name } = target;
     if (name === 'add-button') {
       this.addCart({ id, title, thumbnail, price, quantity });
@@ -92,7 +92,7 @@ class App extends Component {
     if (name === 'rem-button') {
       this.subCart({ id, title, thumbnail, price, quantity });
     }
-    this.handleButton(stockQuantity, quantity);
+    this.handleButton(id);
   };
 
   countProducts = ({ id }) => {
