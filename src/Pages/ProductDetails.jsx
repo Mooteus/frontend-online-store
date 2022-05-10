@@ -8,10 +8,6 @@ class ProductDetails extends Component {
     inputEmail: '',
     textarea: '',
     evaluations: JSON.parse(localStorage.getItem('evaluations')) || [],
-    minProduct: false,
-    maxProduct: false,
-    disabledDecrease: false,
-    disabledIncrease: false,
   };
 
   componentDidMount() {
@@ -26,7 +22,6 @@ class ProductDetails extends Component {
     } = this.props;
     const { cart } = this.props;
     const productInformation = cart.find((product) => product.id === id);
-    console.log(productInformation);
     this.setState({
       productInformation,
     });
@@ -60,73 +55,24 @@ class ProductDetails extends Component {
     );
   };
 
-  handleButton = () => {
-    const { productInformation } = this.state;
-    const { quantity, available_quantity: stockQuantity } = productInformation;
-    if (stockQuantity === quantity) {
-      this.setState({
-        disabledIncrease: true,
-        maxProduct: true,
-      });
-    } else {
-      this.setState({
-        disabledIncrease: false,
-        maxProduct: false,
-      });
-    }
-    if (quantity === 0) {
-      this.setState({
-        disabledDecrease: true,
-        minProduct: true,
-      });
-    } else {
-      this.setState({
-        disabledDecrease: false,
-        minProduct: false,
-      });
-    }
-  };
-
-  handleAmount = async ({ id, title, thumbnail, price, quantity }, { target }) => {
-    const { name } = target;
-    const { addCart, subCart } = this.props;
-    if (name === 'add-button') {
-      await addCart({ id, title, thumbnail, price, quantity });
-    }
-    if (name === 'rem-button') {
-      await subCart({ id, title, thumbnail, price, quantity });
-    }
-    this.handleButton();
-  };
-
   render() {
     const starNumber = 5;
-    const {
-      productInformation,
-      inputEmail,
-      textarea,
-      evaluations,
-      minProduct,
-      maxProduct,
-      disabledIncrease,
-      disabledDecrease,
-    } = this.state;
-    const { addCart, cart } = this.props;
+    const { productInformation, inputEmail, textarea, evaluations } = this.state;
+    const { addCart, cart, handleProduct, handleAmount } = this.props;
+    const { minProduct, maxProduct, disabledIncrease, disabledDecrease } = handleProduct;
     const { title, thumbnail, price, id, quantity } = productInformation;
     const totalProducts = cart.reduce((acc, curr) => acc + curr.quantity, 0);
     return (
       <>
         <Link to="/">
-          <button type="button" data-testid="checkout-products">
-            Inicio
-          </button>
+          <button type="button">Inicio</button>
         </Link>
         <Link to="/cart" data-testid="shopping-cart-button">
           <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
-          <p data-testid="shopping-cart-size">{totalProducts}</p>
+          <p>{totalProducts}</p>
         </Link>
         <div>
-          <h3 data-testid="product-detail-name">{title}</h3>
+          <h3>{title}</h3>
           <img src={ thumbnail } alt={ title } />
           <h4>
             R$:
@@ -137,7 +83,9 @@ class ProductDetails extends Component {
         <div>
           <button
             type="button"
-            onClick={ (event) => this.handleAmount(productInformation, event) }
+            onClick={ (event) => {
+              handleAmount(productInformation, event);
+            } }
             name="add-button"
             disabled={ disabledIncrease }
           >
@@ -147,7 +95,9 @@ class ProductDetails extends Component {
           <p>{quantity}</p>
           <button
             type="button"
-            onClick={ (event) => this.handleAmount(productInformation, event) }
+            onClick={ (event) => {
+              handleAmount(productInformation, event);
+            } }
             name="rem-button"
             disabled={ disabledDecrease }
           >
@@ -235,8 +185,8 @@ ProductDetails.propTypes = {
 
 ProductDetails.propTypes = {
   cart: PropTypes.arrayOf(Object).isRequired,
-  addCart: PropTypes.func.isRequired,
-  subCart: PropTypes.func.isRequired,
+  handleProduct: PropTypes.arrayOf(Object).isRequired,
+  handleAmount: PropTypes.func.isRequired,
 };
 
 export default ProductDetails;

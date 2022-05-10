@@ -8,6 +8,12 @@ import ProductDetails from './Pages/ProductDetails';
 class App extends Component {
   state = {
     cart: JSON.parse(localStorage.getItem('cart')) || [],
+    handleProduct: {
+      disabledIncrease: false,
+      maxProduct: false,
+      disabledDecrease: false,
+      minProduct: false,
+    },
   };
 
   addCart = (product) => {
@@ -41,6 +47,51 @@ class App extends Component {
       },
       () => this.saveStorage(),
     );
+  };
+
+  handleButton = (stockQuantity, quantity) => {
+    if (stockQuantity === quantity) {
+      this.setState({
+        handleProduct: {
+          disabledIncrease: true,
+          maxProduct: true,
+          disabledDecrease: false,
+          minProduct: false,
+        },
+      });
+    } else if (quantity === 0) {
+      this.setState({
+        handleProduct: {
+          disabledIncrease: false,
+          maxProduct: false,
+          disabledDecrease: true,
+          minProduct: true,
+        },
+      });
+    } else {
+      this.setState({
+        handleProduct: {
+          disabledIncrease: false,
+          maxProduct: false,
+          disabledDecrease: false,
+          minProduct: false,
+        },
+      });
+    }
+  };
+
+  handleAmount = (
+    { id, title, thumbnail, price, quantity, available_quantity: stockQuantity },
+    { target },
+  ) => {
+    const { name } = target;
+    if (name === 'add-button') {
+      this.addCart({ id, title, thumbnail, price, quantity });
+    }
+    if (name === 'rem-button') {
+      this.subCart({ id, title, thumbnail, price, quantity });
+    }
+    this.handleButton(stockQuantity, quantity);
   };
 
   countProducts = ({ id }) => {
@@ -78,7 +129,7 @@ class App extends Component {
   };
 
   render() {
-    const { cart } = this.state;
+    const { cart, handleProduct } = this.state;
     const cartFiltered = this.filterCart();
 
     return (
@@ -92,6 +143,8 @@ class App extends Component {
                 productsCart={ cartFiltered }
                 addCart={ this.addCart }
                 subCart={ this.subCart }
+                handleProduct={ handleProduct }
+                handleAmount={ this.handleAmount }
               />
             ) }
           />
@@ -118,6 +171,8 @@ class App extends Component {
                 addCart={ this.addCart }
                 cart={ cartFiltered }
                 subCart={ this.subCart }
+                handleProduct={ handleProduct }
+                handleAmount={ this.handleAmount }
               />
             ) }
           />

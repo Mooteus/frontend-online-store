@@ -5,7 +5,7 @@ import ProductCart from '../components/ProductCart';
 
 class Cart extends Component {
   render() {
-    const { productsCart, addCart, subCart } = this.props;
+    const { productsCart, addCart, subCart, handleAmount } = this.props;
     return (
       <main>
         <Link to="/">
@@ -20,7 +20,7 @@ class Cart extends Component {
             <ProductCart
               key={ i }
               { ...products }
-              stockQuantity={ products.available_quantity }
+              handleAmount={ handleAmount }
               addCart={ addCart }
               subCart={ subCart }
             />
@@ -42,5 +42,6 @@ Cart.propTypes = {
   productsCart: PropTypes.arrayOf(Object).isRequired,
   addCart: PropTypes.func.isRequired,
   subCart: PropTypes.func.isRequired,
+  handleAmount: PropTypes.func.isRequired,
 };
 export default Cart;
