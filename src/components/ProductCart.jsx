@@ -3,22 +3,22 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 class ProductCart extends Component {
-  state = {
-    disabledIncrease: false,
-    minProduct: false,
-    maxProduct: false,
-    disabledDecrease: false,
-  };
-
   // componentDidMount() {
   //   const { handleAmount } = this.props;
   //   handleAmount();
   // }
 
   render() {
-    const { id, title, thumbnail, price, quantity, handleAmount } = this.props;
+    const {
+      id,
+      title,
+      thumbnail,
+      price,
+      quantity,
+      handleAmount,
+      handleProduct } = this.props;
     const products = { id, title, thumbnail, price, quantity };
-    const { disabledIncrease, minProduct, maxProduct, disabledDecrease } = this.state;
+    const { disabledIncrease, minProduct, maxProduct, disabledDecrease } = handleProduct;
     return (
       <div key={ id }>
         <p>{title}</p>
@@ -68,5 +68,11 @@ ProductCart.propTypes = {
   price: PropTypes.number.isRequired,
   quantity: PropTypes.number.isRequired,
   handleAmount: PropTypes.func.isRequired,
+  handleProduct: PropTypes.shape({
+    disabledIncrease: PropTypes.bool.isRequired,
+    minProduct: PropTypes.bool.isRequired,
+    maxProduct: PropTypes.bool.isRequired,
+    disabledDecrease: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 export default ProductCart;

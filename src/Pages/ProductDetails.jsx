@@ -174,19 +174,22 @@ class ProductDetails extends Component {
     );
   }
 }
+
 ProductDetails.propTypes = {
   addCart: PropTypes.func.isRequired,
+  cart: PropTypes.arrayOf(Object).isRequired,
+  handleAmount: PropTypes.func.isRequired,
+  handleProduct: PropTypes.shape({
+    disabledIncrease: PropTypes.bool.isRequired,
+    minProduct: PropTypes.bool.isRequired,
+    maxProduct: PropTypes.bool.isRequired,
+    disabledDecrease: PropTypes.bool.isRequired,
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }),
   }).isRequired,
-};
-
-ProductDetails.propTypes = {
-  cart: PropTypes.arrayOf(Object).isRequired,
-  handleProduct: PropTypes.arrayOf(Object).isRequired,
-  handleAmount: PropTypes.func.isRequired,
 };
 
 export default ProductDetails;

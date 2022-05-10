@@ -50,6 +50,7 @@ class App extends Component {
   };
 
   handleButton = (stockQuantity, quantity) => {
+    console.log(stockQuantity);
     if (stockQuantity === quantity) {
       this.setState({
         handleProduct: {
@@ -81,7 +82,7 @@ class App extends Component {
   };
 
   handleAmount = (
-    { id, title, thumbnail, price, quantity, available_quantity: stockQuantity },
+    { id, title, thumbnail, price, quantity, stockQuantity },
     { target },
   ) => {
     const { name } = target;
