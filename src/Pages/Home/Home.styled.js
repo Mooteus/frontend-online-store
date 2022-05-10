@@ -51,8 +51,27 @@ export const CategoriesContainer = styled.nav`
 
 export const CategorieButton = styled.button`
   width: 100%;
+  cursor: pointer;
 `;
 
 export const PageContainer = styled.div`
   display: flex;
+`;
+
+export const ProductContainer = styled.div`
+  width: 80%;
+  display: flex;
+  margin-left: 1em;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`;
+
+export const ProductCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 250px;
+  height: 400px;
+  margin-bottom: 10px;
 `;

@@ -104,10 +104,10 @@ class Home extends Component {
               </styled.CategorieButton>
             ))}
           </styled.CategoriesContainer>
-          <div>
+          <styled.ProductContainer>
             {products.map((product) => (
-              <div key={ product.id } data-testid="product">
-                <h3>{product.title}</h3>
+              <styled.ProductCard key={ product.id } data-testid="product">
+                <h4>{product.title}</h4>
                 <img src={ product.thumbnail } alt={ product.title } />
                 <h4>
                   R$:
@@ -128,9 +128,9 @@ class Home extends Component {
                 >
                   Adicionar ao carrinho
                 </button>
-              </div>
+              </styled.ProductCard>
             ))}
-          </div>
+          </styled.ProductContainer>
         </styled.PageContainer>
       </>
     );
