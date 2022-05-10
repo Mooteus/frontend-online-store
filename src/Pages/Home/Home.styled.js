@@ -44,3 +44,15 @@ export const CartIcon = styled.img`
 export const HomeMensage = styled.p`
   text-align: center;
 `;
+
+export const CategoriesContainer = styled.nav`
+  width: 250px;
+`;
+
+export const CategorieButton = styled.button`
+  width: 100%;
+`;
+
+export const PageContainer = styled.div`
+  display: flex;
+`;

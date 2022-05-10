@@ -90,46 +90,48 @@ class Home extends Component {
         <styled.HomeMensage data-testid="home-initial-message">
           Digite algum termo de pesquisa ou escolha uma categoria.
         </styled.HomeMensage>
-        <nav>
-          {data.map(({ name, id }) => (
-            <button
-              key={ id }
-              type="button"
-              id={ id }
-              data-testid="category"
-              onClick={ this.selectCategory }
-            >
-              {name}
-            </button>
-          ))}
-        </nav>
-        <div>
-          {products.map((product) => (
-            <div key={ product.id } data-testid="product">
-              <h3>{product.title}</h3>
-              <img src={ product.thumbnail } alt={ product.title } />
-              <h4>
-                R$:
-                {' '}
-                {product.price}
-              </h4>
-              {product.shipping.free_shipping ? (
-                <p data-testid="free-shipping">Frete Gratis</p>
-              ) : null}
-              <Link data-testid="product-detail-link" to={ `/product/${product.id}` }>
-                Mais detalhes
-              </Link>
-              <button
+        <styled.PageContainer>
+          <styled.CategoriesContainer>
+            {data.map(({ name, id }) => (
+              <styled.CategorieButton
+                key={ id }
                 type="button"
-                id={ product.id }
-                data-testid="product-add-to-cart"
-                onClick={ () => addCart(product) }
+                id={ id }
+                data-testid="category"
+                onClick={ this.selectCategory }
               >
-                Adicionar ao carrinho
-              </button>
-            </div>
-          ))}
-        </div>
+                {name}
+              </styled.CategorieButton>
+            ))}
+          </styled.CategoriesContainer>
+          <div>
+            {products.map((product) => (
+              <div key={ product.id } data-testid="product">
+                <h3>{product.title}</h3>
+                <img src={ product.thumbnail } alt={ product.title } />
+                <h4>
+                  R$:
+                  {' '}
+                  {product.price}
+                </h4>
+                {product.shipping.free_shipping ? (
+                  <p data-testid="free-shipping">Frete Gratis</p>
+                ) : null}
+                <Link data-testid="product-detail-link" to={ `/product/${product.id}` }>
+                  Mais detalhes
+                </Link>
+                <button
+                  type="button"
+                  id={ product.id }
+                  data-testid="product-add-to-cart"
+                  onClick={ () => addCart(product) }
+                >
+                  Adicionar ao carrinho
+                </button>
+              </div>
+            ))}
+          </div>
+        </styled.PageContainer>
       </>
     );
   }
