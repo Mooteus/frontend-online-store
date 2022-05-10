@@ -62,7 +62,7 @@ export const ProductContainer = styled.div`
   width: 80%;
   display: flex;
   margin-left: 1em;
-  justify-content: space-between;
+  justify-content: space-evenly;
   flex-wrap: wrap;
 `;
 
@@ -74,4 +74,9 @@ export const ProductCard = styled.div`
   width: 250px;
   height: 400px;
   margin-bottom: 10px;
+`;
+
+export const ProductThumbnail = styled.img`
+  width: 100px;
+  height: 100px;
 `;
