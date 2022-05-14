@@ -158,7 +158,10 @@ class Home extends Component {
             {products.map((product) => (
               <styled.ProductCard key={ product.id } data-testid="product">
                 <h4>{product.title}</h4>
-                <styled.ProductThumbnail src={ product.thumbnail } alt={ product.title } />
+                <styled.ProductThumbnail
+                  src={ product.thumbnail }
+                  alt={ product.title }
+                />
                 <h4>
                   R$:
                   {' '}
