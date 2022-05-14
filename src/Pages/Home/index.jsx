@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as api from '../../services/api';
 
-import CartImage from './img/cart-shopping-solid.svg';
+import CartImage from '../../img/cart-shopping-solid.svg';
 import * as styled from './Home.styled';
 
 class Home extends Component {
@@ -42,7 +42,7 @@ class Home extends Component {
     });
 
     return products;
-  }
+  };
 
   // aplica ordenação selecionada
   sortProducts = (sorting, products) => {
@@ -52,7 +52,7 @@ class Home extends Component {
       // a - b crescente, a + b descrescente
     }
     return products;
-  }
+  };
 
   // calcula constante de ordenação
   getSortingFactor = (sorting) => {
@@ -61,18 +61,22 @@ class Home extends Component {
     const desc = -1;
     if (sorting === 'none') {
       return none;
-    } if (sorting === 'asc') {
+    }
+    if (sorting === 'asc') {
       return asc;
     }
     return desc;
-  }
+  };
 
   setSorting = ({ target }) => {
     const sorting = target.value;
-    this.setState({
-      sorting,
-    }, this.search);
-  }
+    this.setState(
+      {
+        sorting,
+      },
+      this.search,
+    );
+  };
 
   search = async () => {
     const products = await this.getProductsFromCategoryAndQuery();
@@ -104,6 +108,11 @@ class Home extends Component {
       <>
         <styled.Header>
           <styled.SearchContainer>
+            <select onChange={ this.setSorting }>
+              <option value="none">sem ordenação</option>
+              <option value="asc">menor preço</option>
+              <option value="desc">maior preço</option>
+            </select>
             <styled.SearchInput
               data-testid="query-input"
               name="valueInput"
@@ -119,20 +128,11 @@ class Home extends Component {
               Pesquisar
             </styled.SearchButton>
           </styled.SearchContainer>
-          <select
-            onChange={ this.setSorting }
-          >
-            <option value="none">sem ordenação</option>
-            <option value="asc">menor preço</option>
-            <option value="desc">maior preço</option>
-          </select>
           <styled.CartContainer>
             <Link to="/cart" data-testid="shopping-cart-button">
               <styled.CartIcon src={ CartImage } alt="Button Carrinho de Compras" />
             </Link>
-            <styled.CartCounter
-              data-testid="shopping-cart-size"
-            >
+            <styled.CartCounter data-testid="shopping-cart-size">
               {cart.length}
             </styled.CartCounter>
           </styled.CartContainer>
@@ -158,10 +158,7 @@ class Home extends Component {
             {products.map((product) => (
               <styled.ProductCard key={ product.id } data-testid="product">
                 <h4>{product.title}</h4>
-                <styled.ProductThumbnail
-                  src={ product.thumbnail }
-                  alt={ product.title }
-                />
+                <styled.ProductThumbnail src={ product.thumbnail } alt={ product.title } />
                 <h4>
                   R$:
                   {' '}

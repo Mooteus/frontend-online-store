@@ -53,7 +53,6 @@ class App extends Component {
     const { cart } = this.state;
     const productCart = cart.find((product) => product.id === id);
     const { quantity, available_quantity: stockQuantity } = productCart;
-    console.log(stockQuantity);
     if (stockQuantity === quantity) {
       this.setState({
         handleProduct: {

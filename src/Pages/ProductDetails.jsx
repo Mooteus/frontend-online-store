@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { getProductsById } from '../services/api';
+import CartImage from '../img/cart-shopping-solid.svg';
+
+const CartIcon = styled.img`
+  width: 30px;
+  height: 30px;
+`;
 
 class ProductDetails extends Component {
   state = {
@@ -20,8 +28,7 @@ class ProductDetails extends Component {
         params: { id },
       },
     } = this.props;
-    const { cart } = this.props;
-    const productInformation = cart.find((product) => product.id === id);
+    const productInformation = await getProductsById(id);
     this.setState({
       productInformation,
     });
@@ -68,7 +75,7 @@ class ProductDetails extends Component {
           <button type="button">Inicio</button>
         </Link>
         <Link to="/cart" data-testid="shopping-cart-button">
-          <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
+          <CartIcon src={ CartImage } alt="Button Carrinho de Compras" />
           <p>{totalProducts}</p>
         </Link>
         <div>
