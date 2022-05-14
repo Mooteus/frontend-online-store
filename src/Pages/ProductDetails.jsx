@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { getProductsById } from '../services/api';
 import CartImage from '../img/cart-shopping-solid.svg';
+import Product from '../components/Product';
 
 const CartIcon = styled.img`
   width: 30px;
@@ -67,7 +68,7 @@ class ProductDetails extends Component {
     const { productInformation, inputEmail, textarea, evaluations } = this.state;
     const { addCart, cart, handleProduct, handleAmount } = this.props;
     const { minProduct, maxProduct, disabledIncrease, disabledDecrease } = handleProduct;
-    const { title, thumbnail, price, id, quantity } = productInformation;
+    const { id, quantity } = productInformation;
     const totalProducts = cart.reduce((acc, curr) => acc + curr.quantity, 0);
     return (
       <>
@@ -79,12 +80,7 @@ class ProductDetails extends Component {
           <p>{totalProducts}</p>
         </Link>
         <div>
-          <h3>{title}</h3>
-          <img src={ thumbnail } alt={ title } />
-          <h4>
-            R$:
-            {price}
-          </h4>
+          <Product { ...productInformation } />
         </div>
 
         <div>
