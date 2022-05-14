@@ -27,7 +27,7 @@ class Cart extends Component {
             />
           ))
         )}
-        {productsCart.length === 0 && (
+        {productsCart.length > 0 && (
           <Link to="/checkout">
             <button type="button" data-testid="checkout-products">
               Finalizar Compra
