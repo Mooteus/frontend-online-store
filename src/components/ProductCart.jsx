@@ -1,81 +1,64 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class ProductCart extends Component {
-  state = {
-    disabled: false,
-    minProduct: false,
-    maxProduct: false,
-  };
-
-  handleButton = () => {
-    const { quantity } = this.props;
-    const { stockQuantity } = this.props;
-    if (stockQuantity === quantity) {
-      this.setState({
-        disabled: true,
-        maxProduct: true,
-      });
-      return false;
-    }
-    this.setState({
-      disabled: false,
-      maxProduct: false,
-    });
-    return true;
-  };
-
-  handleAmount = ({ id, title, thumbnail, price, quantity }, { target }) => {
-    const { name } = target;
-    const { addCart, subCart } = this.props;
-    if (this.handleButton()) {
-      if (name === 'add-button') {
-        addCart({ id, title, thumbnail, price, quantity });
-      }
-      if (name === 'rem-button') {
-        subCart({ id, title, thumbnail, price, quantity });
-      }
-    } else if (name === 'rem-button') {
-      subCart({ id, title, thumbnail, price, quantity });
-    }
-  };
+  // componentDidMount() {
+  //   const { handleAmount } = this.props;
+  //   handleAmount();
+  // }
 
   render() {
-    const { id, title, thumbnail, price, quantity } = this.props;
-    const products = { id, title, thumbnail, price, quantity };
-    const { disabled, minProduct, maxProduct } = this.state;
+    const {
+      id,
+      title,
+      thumbnail,
+      price,
+      quantity,
+      handleAmount,
+      handleProduct } = this.props;
+    const products = {
+      id,
+      title,
+      thumbnail,
+      price,
+      quantity,
+    };
+    const { disabledIncrease, minProduct, maxProduct, disabledDecrease } = handleProduct;
     return (
       <div key={ id }>
-        <p data-testid="shopping-cart-product-name">{title}</p>
+        <p>{title}</p>
         <img src={ thumbnail } alt={ title } />
         <h4>
           R$:
           {price * quantity}
         </h4>
+        <Link to={ `/product/${id}` }>Mais detalhes</Link>
         <div>
           <button
-            data-testid="product-increase-quantity"
             type="button"
-            onClick={ (event) => this.handleAmount(products, event) }
+            onClick={ (event) => {
+              handleAmount(products, event);
+            } }
             name="add-button"
-            disabled={ disabled }
+            disabled={ disabledIncrease }
           >
             +
           </button>
 
-          <p data-testid="shopping-cart-product-quantity">{quantity}</p>
+          <p>{quantity}</p>
           <button
-            data-testid="product-decrease-quantity"
             type="button"
-            onClick={ (event) => this.handleAmount(products, event) }
+            onClick={ (event) => {
+              handleAmount(products, event);
+            } }
             name="rem-button"
+            disabled={ disabledDecrease }
           >
             -
           </button>
-          {minProduct ? (
-            <p>A quantidade de produtos não pode ser menor que zero</p>
-          ) : null}
-          {maxProduct ? <p>A quantidade maxima em estoque foi atingida</p> : null}
+          {minProduct && <p>A quantidade de produtos não pode ser menor que zero</p>}
+          {maxProduct && <p>A quantidade maxima em estoque foi atingida</p>}
         </div>
       </div>
     );
@@ -88,8 +71,12 @@ ProductCart.propTypes = {
   thumbnail: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   quantity: PropTypes.number.isRequired,
-  stockQuantity: PropTypes.number.isRequired,
-  addCart: PropTypes.func.isRequired,
-  subCart: PropTypes.func.isRequired,
+  handleAmount: PropTypes.func.isRequired,
+  handleProduct: PropTypes.shape({
+    disabledIncrease: PropTypes.bool.isRequired,
+    minProduct: PropTypes.bool.isRequired,
+    maxProduct: PropTypes.bool.isRequired,
+    disabledDecrease: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 export default ProductCart;

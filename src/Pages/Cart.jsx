@@ -5,9 +5,14 @@ import ProductCart from '../components/ProductCart';
 
 class Cart extends Component {
   render() {
-    const { productsCart, addCart, subCart } = this.props;
+    const { productsCart, addCart, subCart, handleAmount, handleProduct } = this.props;
     return (
       <main>
+        <Link to="/">
+          <button type="button" data-testid="checkout-products">
+            Inicio
+          </button>
+        </Link>
         {productsCart.length === 0 ? (
           <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
         ) : (
@@ -15,13 +20,14 @@ class Cart extends Component {
             <ProductCart
               key={ i }
               { ...products }
-              stockQuantity={ products.available_quantity }
+              handleAmount={ handleAmount }
               addCart={ addCart }
               subCart={ subCart }
+              handleProduct={ handleProduct }
             />
           ))
         )}
-        {productsCart.length === 0 ? null : (
+        {productsCart.length === 0 && (
           <Link to="/checkout">
             <button type="button" data-testid="checkout-products">
               Finalizar Compra
@@ -37,5 +43,12 @@ Cart.propTypes = {
   productsCart: PropTypes.arrayOf(Object).isRequired,
   addCart: PropTypes.func.isRequired,
   subCart: PropTypes.func.isRequired,
+  handleAmount: PropTypes.func.isRequired,
+  handleProduct: PropTypes.shape({
+    disabledIncrease: PropTypes.bool.isRequired,
+    minProduct: PropTypes.bool.isRequired,
+    maxProduct: PropTypes.bool.isRequired,
+    disabledDecrease: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 export default Cart;

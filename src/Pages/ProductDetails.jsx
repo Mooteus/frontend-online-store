@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { getProductsById } from '../services/api';
 
 class ProductDetails extends Component {
   state = {
@@ -21,8 +20,8 @@ class ProductDetails extends Component {
         params: { id },
       },
     } = this.props;
-
-    const productInformation = await getProductsById(id);
+    const { cart } = this.props;
+    const productInformation = cart.find((product) => product.id === id);
     this.setState({
       productInformation,
     });
@@ -59,22 +58,53 @@ class ProductDetails extends Component {
   render() {
     const starNumber = 5;
     const { productInformation, inputEmail, textarea, evaluations } = this.state;
-    const { addCart, cart } = this.props;
-    const { title, thumbnail, price, id } = productInformation;
+    const { addCart, cart, handleProduct, handleAmount } = this.props;
+    const { minProduct, maxProduct, disabledIncrease, disabledDecrease } = handleProduct;
+    const { title, thumbnail, price, id, quantity } = productInformation;
     const totalProducts = cart.reduce((acc, curr) => acc + curr.quantity, 0);
     return (
       <>
+        <Link to="/">
+          <button type="button">Inicio</button>
+        </Link>
         <Link to="/cart" data-testid="shopping-cart-button">
           <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
-          <p data-testid="shopping-cart-size">{totalProducts}</p>
+          <p>{totalProducts}</p>
         </Link>
         <div>
-          <h3 data-testid="product-detail-name">{title}</h3>
+          <h3>{title}</h3>
           <img src={ thumbnail } alt={ title } />
           <h4>
             R$:
             {price}
           </h4>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            onClick={ (event) => {
+              handleAmount(productInformation, event);
+            } }
+            name="add-button"
+            disabled={ disabledIncrease }
+          >
+            +
+          </button>
+
+          <p>{quantity}</p>
+          <button
+            type="button"
+            onClick={ (event) => {
+              handleAmount(productInformation, event);
+            } }
+            name="rem-button"
+            disabled={ disabledDecrease }
+          >
+            -
+          </button>
+          {minProduct && <p>A quantidade de produtos não pode ser menor que zero</p>}
+          {maxProduct && <p>A quantidade maxima em estoque foi atingida</p>}
         </div>
         <button
           id={ id }
@@ -142,18 +172,22 @@ class ProductDetails extends Component {
     );
   }
 }
+
 ProductDetails.propTypes = {
   addCart: PropTypes.func.isRequired,
+  cart: PropTypes.arrayOf(Object).isRequired,
+  handleAmount: PropTypes.func.isRequired,
+  handleProduct: PropTypes.shape({
+    disabledIncrease: PropTypes.bool.isRequired,
+    minProduct: PropTypes.bool.isRequired,
+    maxProduct: PropTypes.bool.isRequired,
+    disabledDecrease: PropTypes.bool.isRequired,
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }),
   }).isRequired,
-};
-
-ProductDetails.propTypes = {
-  addCart: PropTypes.func.isRequired,
-  cart: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default ProductDetails;

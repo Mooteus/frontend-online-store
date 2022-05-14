@@ -55,6 +55,8 @@ class Home extends Component {
   render() {
     const { data, valueInput, products } = this.state;
     const { addCart, cart } = this.props;
+    const totalProducts = cart.reduce((acc, curr) => acc + curr.quantity, 0);
+
     return (
       <>
         <main>
@@ -70,7 +72,7 @@ class Home extends Component {
           </button>
           <Link to="/cart" data-testid="shopping-cart-button">
             <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
-            <p data-testid="shopping-cart-size">{cart.length}</p>
+            <p data-testid="shopping-cart-size">{totalProducts}</p>
           </Link>
 
           <p data-testid="home-initial-message">

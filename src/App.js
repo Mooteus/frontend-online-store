@@ -8,6 +8,12 @@ import ProductDetails from './Pages/ProductDetails';
 class App extends Component {
   state = {
     cart: JSON.parse(localStorage.getItem('cart')) || [],
+    handleProduct: {
+      disabledIncrease: false,
+      maxProduct: false,
+      disabledDecrease: false,
+      minProduct: false,
+    },
   };
 
   addCart = (product) => {
@@ -43,10 +49,56 @@ class App extends Component {
     );
   };
 
+  handleButton = (id) => {
+    const { cart } = this.state;
+    const productCart = cart.find((product) => product.id === id);
+    const { quantity, available_quantity: stockQuantity } = productCart;
+    console.log(stockQuantity);
+    if (stockQuantity === quantity) {
+      this.setState({
+        handleProduct: {
+          disabledIncrease: true,
+          maxProduct: true,
+          disabledDecrease: false,
+          minProduct: false,
+        },
+      });
+    } else if (quantity === 0) {
+      this.setState({
+        handleProduct: {
+          disabledIncrease: false,
+          maxProduct: false,
+          disabledDecrease: true,
+          minProduct: true,
+        },
+      });
+    } else {
+      this.setState({
+        handleProduct: {
+          disabledIncrease: false,
+          maxProduct: false,
+          disabledDecrease: false,
+          minProduct: false,
+        },
+      });
+    }
+  };
+
+  handleAmount = ({ id, title, thumbnail, price, quantity }, { target }) => {
+    const { name } = target;
+    if (name === 'add-button') {
+      this.addCart({ id, title, thumbnail, price, quantity });
+    }
+    if (name === 'rem-button') {
+      this.subCart({ id, title, thumbnail, price, quantity });
+    }
+    this.handleButton(id);
+  };
+
   countProducts = ({ id }) => {
     const { cart } = this.state;
     const newCart = cart.map((product) => {
-      if (product.id === id && product.quantity >= 1) {
+      if (product.id === id && product.quantity >= 0) {
         product.quantity += 1;
       }
       if (product.id === id && product.quantity === undefined) {
@@ -78,7 +130,7 @@ class App extends Component {
   };
 
   render() {
-    const { cart } = this.state;
+    const { cart, handleProduct } = this.state;
     const cartFiltered = this.filterCart();
 
     return (
@@ -92,6 +144,8 @@ class App extends Component {
                 productsCart={ cartFiltered }
                 addCart={ this.addCart }
                 subCart={ this.subCart }
+                handleProduct={ handleProduct }
+                handleAmount={ this.handleAmount }
               />
             ) }
           />
@@ -117,6 +171,9 @@ class App extends Component {
                 { ...PropsRouter }
                 addCart={ this.addCart }
                 cart={ cartFiltered }
+                subCart={ this.subCart }
+                handleProduct={ handleProduct }
+                handleAmount={ this.handleAmount }
               />
             ) }
           />
