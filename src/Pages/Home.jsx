@@ -11,6 +11,7 @@ class Home extends Component {
     products: [],
     categoryId: '',
     cart: [],
+    sorting: 'none',
   };
 
   async componentDidMount() {
@@ -27,10 +28,52 @@ class Home extends Component {
     });
   };
 
-  search = async () => {
-    const { valueInput, categoryId } = this.state;
+  getProductsFromCategoryAndQuery = async () => {
+    const { valueInput, categoryId, sorting } = this.state;
     const data = await api.getProductsFromCategoryAndQuery(categoryId, valueInput);
     const products = data.results;
+    const sortedProducts = this.sortProducts(sorting, products);
+
+    this.setState({
+      products: sortedProducts,
+      valueInput: '',
+    });
+
+    return products;
+  }
+
+  // aplica ordenação selecionada
+  sortProducts = (sorting, products) => {
+    const sortingFactor = this.getSortingFactor(sorting);
+    if (sortingFactor !== 0) {
+      return products.sort((a, b) => sortingFactor * (a.price - b.price));
+      // a - b crescente, a + b descrescente
+    }
+    return products;
+  }
+
+  // calcula constante de ordenação
+  getSortingFactor = (sorting) => {
+    const none = 0;
+    const asc = 1;
+    const desc = -1;
+    if (sorting === 'none') {
+      return none;
+    } if (sorting === 'asc') {
+      return asc;
+    }
+    return desc;
+  }
+
+  setSorting = ({ target }) => {
+    const sorting = target.value;
+    this.setState({
+      sorting,
+    }, this.search);
+  }
+
+  search = async () => {
+    const products = await this.getProductsFromCategoryAndQuery();
     this.setState({
       products,
       valueInput: '',
@@ -70,6 +113,13 @@ class Home extends Component {
           <button type="button" data-testid="query-button" onClick={ this.search }>
             Pesquisar
           </button>
+          <select
+            onChange={ this.setSorting }
+          >
+            <option value="none">sem ordenação</option>
+            <option value="asc">menor preço</option>
+            <option value="desc">maior preço</option>
+          </select>
           <Link to="/cart" data-testid="shopping-cart-button">
             <img src="https://fav.farm/🛒" alt="Button Carrinho de Compras" />
             <p data-testid="shopping-cart-size">{totalProducts}</p>
