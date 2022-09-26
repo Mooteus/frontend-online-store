@@ -1,28 +1,51 @@
 import styled from 'styled-components';
-import { yellow } from '../../utils/colors';
+import { yellow, white, lightGrey2, lightGrey } from '../../utils/colors';
 
 export const Header = styled.header`
   width: 100%;
   height: 80px;
   display: flex;
+  justify-content: center;
   background-color: ${yellow};
 `;
 
 export const SearchContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+  margin-top: 5px;
+  box-shadow: 0px 3px 2px ${lightGrey2};
+  height: 40px;
+  width: 50%;
+`;
+
+export const SearchSelect = styled.select`
+  font-size: 15px;
+  height: 42px;
+  border: none;
+  padding-left: 10px;
+  background-color: ${white};
+  color: ${lightGrey2};
+  border-right: 1px solid ${lightGrey};
 `;
 
 export const SearchInput = styled.input`
-  margin-right: 1em;
-  font-size: 20px;
-  width: 30%;
+  font-size: 15px;
+  width: 100%;
+  height: 40px;
+  border: none;
+  outline:  none;
+  padding-left: 15px;
+
+  ::placeholder {
+    color: ${lightGrey2};
+  };
 `;
 
 export const SearchButton = styled.button`
   cursor: pointer;
+  height: 42px;
+  border: 0px;
+  font-size: 20px;
+  background-color: ${white};
 `;
 
 export const CartContainer = styled.div`

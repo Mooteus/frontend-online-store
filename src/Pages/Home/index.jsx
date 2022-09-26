@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { AiOutlineSearch } from 'react-icons/ai';
 import * as api from '../../services/api';
 
 import CartImage from '../../img/cart-shopping-solid.svg';
@@ -108,24 +109,25 @@ class Home extends Component {
       <>
         <styled.Header>
           <styled.SearchContainer>
-            <select onChange={ this.setSorting }>
+            <styled.SearchSelect onChange={ this.setSorting }>
               <option value="none">sem ordenação</option>
               <option value="asc">menor preço</option>
               <option value="desc">maior preço</option>
-            </select>
+            </styled.SearchSelect>
             <styled.SearchInput
               data-testid="query-input"
               name="valueInput"
               type="text"
               value={ valueInput }
               onChange={ this.onHandleChange }
+              placeholder="Buscar produtos"
             />
             <styled.SearchButton
               type="button"
               data-testid="query-button"
               onClick={ this.search }
             >
-              Pesquisar
+              <AiOutlineSearch />
             </styled.SearchButton>
           </styled.SearchContainer>
           <styled.CartContainer>
