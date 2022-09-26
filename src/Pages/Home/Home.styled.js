@@ -1,8 +1,11 @@
 import styled from 'styled-components';
+import { yellow } from '../../utils/colors';
 
 export const Header = styled.header`
   width: 100%;
+  height: 80px;
   display: flex;
+  background-color: ${yellow};
 `;
 
 export const SearchContainer = styled.div`
