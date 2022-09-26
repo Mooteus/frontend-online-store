@@ -4,6 +4,7 @@ import Home from './Pages/Home';
 import Cart from './Pages/Cart';
 import Checkout from './Pages/Checkout';
 import ProductDetails from './Pages/ProductDetails';
+import GlobalStyle from './utils/globalStyle';
 
 class App extends Component {
   state = {
@@ -134,6 +135,7 @@ class App extends Component {
 
     return (
       <BrowserRouter>
+        <GlobalStyle />
         <Switch>
           <Route
             exact
