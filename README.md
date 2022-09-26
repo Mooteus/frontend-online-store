@@ -2,10 +2,10 @@
 
 # Sumário
 
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Tecnologias utilizadas](#tecnologias-utilizadas)
-- [Como executar o projeto](#como-executar-o-projeto)
-- [Contribuidores](#contribuidores)
+- [Sobre o Projeto](#-sobre-o-projeto-)
+- [Tecnologias utilizadas](#-tecnologias-utilizadas-)
+- [Como executar o projeto](#-como-executar-o-projeto-)
+- [Contribuidores](#-contribuidores-)
 
 ### Sobre o Projeto 🔎
 <p>Um site de e-commerce que usa como base a api do Mercado Livre. No aplicativo é possível ver, buscar, filtrar, adicionar produtos ao carrinho de compras e finalizar a compra</p>
@@ -14,7 +14,7 @@
 ## API
 
 ### Mercado Livre
-O [Mercado Livre](https://www.mercadolivre.com.br/)é uma empresa argentina de tecnologia que oferece soluções de comércio eletrônico para que pessoas e empresas possam comprar, vender, pagar, anunciar e enviar produtos por meio da internet. Sua API permite acesso aos dados dos produtos postados em seu banco de dados, além de outras funcionalidades.
+O [Mercado Livre](https://www.mercadolivre.com.br/) é uma empresa argentina de tecnologia que oferece soluções de comércio eletrônico para que pessoas e empresas possam comprar, vender, pagar, anunciar e enviar produtos por meio da internet. Sua API permite acesso aos dados dos produtos postados em seu banco de dados, além de outras funcionalidades.
 
 ---
 
