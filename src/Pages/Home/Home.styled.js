@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { yellow, white, lightGrey2, lightGrey } from '../../utils/colors';
+import { yellow, white, lightGray2, lightGray } from '../../utils/colors';
 
 export const Header = styled.header`
   width: 100%;
@@ -12,7 +12,7 @@ export const Header = styled.header`
 export const SearchContainer = styled.div`
   display: flex;
   margin-top: 5px;
-  box-shadow: 0px 3px 2px ${lightGrey2};
+  box-shadow: 0px 3px 2px ${lightGray2};
   height: 40px;
   width: 50%;
 `;
@@ -23,8 +23,8 @@ export const SearchSelect = styled.select`
   border: none;
   padding-left: 10px;
   background-color: ${white};
-  color: ${lightGrey2};
-  border-right: 1px solid ${lightGrey};
+  color: ${lightGray2};
+  border-right: 1px solid ${lightGray};
 `;
 
 export const SearchInput = styled.input`
@@ -36,7 +36,7 @@ export const SearchInput = styled.input`
   padding-left: 15px;
 
   ::placeholder {
-    color: ${lightGrey2};
+    color: ${lightGray2};
   };
 `;
 
@@ -90,19 +90,4 @@ export const ProductContainer = styled.div`
   margin-left: 1em;
   justify-content: space-evenly;
   flex-wrap: wrap;
-`;
-
-export const ProductCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  width: 250px;
-  height: 400px;
-  margin-bottom: 10px;
-`;
-
-export const ProductThumbnail = styled.img`
-  width: 100px;
-  height: 100px;
 `;

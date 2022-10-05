@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { AiOutlineSearch } from 'react-icons/ai';
+import ProductCard from '../../components/ProductCard';
 import * as api from '../../services/api';
 
 import CartImage from '../../img/cart-shopping-solid.svg';
@@ -102,9 +103,12 @@ class Home extends Component {
     localStorage.setItem('cart', JSON.stringify(cart));
   };
 
+  qualityImage = (thumbnail) => thumbnail.replace('I.jpg', 'O.jpg')
+
   render() {
     const { data, valueInput, products } = this.state;
     const { addCart, cart } = this.props;
+    console.log(products);
     return (
       <>
         <styled.Header>
@@ -158,32 +162,12 @@ class Home extends Component {
           </styled.CategoriesContainer>
           <styled.ProductContainer>
             {products.map((product) => (
-              <styled.ProductCard key={ product.id } data-testid="product">
-                <h4>{product.title}</h4>
-                <styled.ProductThumbnail
-                  src={ product.thumbnail }
-                  alt={ product.title }
-                />
-                <h4>
-                  R$:
-                  {' '}
-                  {product.price}
-                </h4>
-                {product.shipping.free_shipping ? (
-                  <p data-testid="free-shipping">Frete Gratis</p>
-                ) : null}
-                <Link data-testid="product-detail-link" to={ `/product/${product.id}` }>
-                  Mais detalhes
-                </Link>
-                <button
-                  type="button"
-                  id={ product.id }
-                  data-testid="product-add-to-cart"
-                  onClick={ () => addCart(product) }
-                >
-                  Adicionar ao carrinho
-                </button>
-              </styled.ProductCard>
+              <ProductCard
+                key={ product.id }
+                product={ product }
+                addCart={ addCart }
+                qualityImage={ this.qualityImage }
+              />
             ))}
           </styled.ProductContainer>
         </styled.PageContainer>
